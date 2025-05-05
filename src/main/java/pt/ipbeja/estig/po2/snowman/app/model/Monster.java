@@ -1,18 +1,9 @@
 package pt.ipbeja.estig.po2.snowman.app.model;
 
 public class Monster extends MobileElement {
-    MobileElement position;
 
-    public Monster(MobileElement position) {
-        super(position.row, position.col);
-        this.position = position;
-    }
-
-
-    //para usar quando ele for mover
-    @Override
-    public void move(int newRow, int newCol) {
-
+    public Monster(int row, int col) {
+        super(row, col);
     }
 
     @Override
@@ -21,11 +12,26 @@ public class Monster extends MobileElement {
         int newCol = col;
 
         switch (direction) {
-            case UP -> newRow--;
-            case DOWN -> newRow++;
-            case LEFT -> newCol--;
-            case RIGHT -> newCol++;
+            case UP:    newRow--; break;
+            case DOWN:  newRow++; break;
+            case LEFT:  newCol--; break;
+            case RIGHT: newCol++; break;
         }
-        return false; // so para nao dar erro
+
+        if (!board.validPosition(newRow, newCol)) {
+            return false;
+        }
+
+        Snowball snowball = board.snowballInPosition(newRow, newCol);
+
+        if (snowball != null) {
+            if (!board.moveSnowball(direction, snowball)) {
+                return false;
+            }
+        }
+
+        row = newRow;
+        col = newCol;
+        return true;
     }
 }
