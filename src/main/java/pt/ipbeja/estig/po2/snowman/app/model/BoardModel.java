@@ -1,12 +1,12 @@
 package pt.ipbeja.estig.po2.snowman.app.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardModel {
-    private List<List<PositionContent>> board;
-    private Monster monster;
-    private List<Snowball> snowballs;
+
+    private final List<List<PositionContent>> board;
+    private final Monster monster;
+    private final List<Snowball> snowballs;
 
     public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
         this.board = board;
@@ -14,33 +14,118 @@ public class BoardModel {
         this.snowballs = snowballs;
     }
 
+    /**
+     * Gets the number of rows in the board.
+     *
+     * @return The number of rows.
+     */
+    public int getRows() {
+        return board.size();
+    }
+
+    /**
+     * Gets the number of columns in the board.
+     *
+     * @return The number of columns.
+     */
+    public int getCols() {
+        return board.isEmpty() ? 0 : board.get(0).size();
+    }
+
+
+    // Existing methods...
+
+    /**
+     * Sets the content of a specific position on the board.
+     *
+     * @param row    The row of the position.
+     * @param col    The column of the position.
+     * @param content The new content for the position.
+     */
+    public void setPositionContent(int row, int col, PositionContent content) {
+        this.board.get(row).set(col, content);
+    }
+
+    /**
+     * Retrieves the content of a specific position on the board.
+     *
+     * @param row The row index of the position.
+     * @param col The column index of the position.
+     * @return The PositionContent at the specified row and column.
+     * @throws IndexOutOfBoundsException if the row or col is out of bounds.
+     */
     public PositionContent getPositionContent(int row, int col) {
+        if (row < 0 || row >= board.size() || col < 0 || col >= board.get(row).size()) {
+            throw new IndexOutOfBoundsException("Row or column is out of bounds");
+        }
         return board.get(row).get(col);
     }
 
-    public boolean validPosition(int newRow, int newCol) {
-        try{
-            return getPositionContent(newRow, newCol) != PositionContent.BLOCK;
-        } catch (Exception e) {
-            return false;
+
+    /**
+     * Moves the monster in the given direction if valid.
+     *
+     * @param direction The direction to move the monster.
+     * @return true if the move was successful.
+     */
+    public boolean moveMonster(Direction direction) {
+        int prevRow = monster.getRow();
+        int prevCol = monster.getCol();
+
+        // Attempt to move the monster
+        if (monster.move(direction, this)) {
+            // Update the board state
+            this.setPositionContent(prevRow, prevCol, PositionContent.NO_SNOW);
+            this.setPositionContent(monster.getRow(), monster.getCol(), PositionContent.SNOWMAN);
+            return true;
         }
+        return false; // Move was not valid
     }
 
+    /**
+     * Checks if a given position is valid on the board.
+     * A valid position must be within bounds and cannot contain a block.
+     *
+     * @param row The row index to check.
+     * @param col The column index to check.
+     * @return true if the position is valid; false otherwise.
+     */
+    public boolean validPosition(int row, int col) {
+        // Check if row and column are within bounds
+        if (row < 0 || row >= board.size() || col < 0 || col >= board.get(0).size()) {
+            return false;
+        }
+
+        // Check if position is not a BLOCK
+        return board.get(row).get(col) != PositionContent.BLOCK;
+    }
+
+    /**
+     * Returns the snowball found in the specified position, or null if no snowball is present.
+     *
+     * @param row The row index.
+     * @param col The column index.
+     * @return The snowball object at the position, or null if no snowball is found.
+     */
     public Snowball snowballInPosition(int row, int col) {
         for (Snowball snowball : snowballs) {
-            if(snowball.getRow() == row && snowball.getCol() == col) {
+            if (snowball.getRow() == row && snowball.getCol() == col) {
                 return snowball;
             }
         }
-
-        return null;
+        return null; // No snowball found at the position
     }
 
-    public boolean moveMonster(Direction direction) {
-        return monster.move(direction, this);
-    }
-
+    /**
+     * Attempts to move a snowball in the specified direction on the board.
+     *
+     * @param direction The direction to move the snowball.
+     * @param snowball The snowball to be moved.
+     * @return true if the snowball was successfully moved; false otherwise.
+     */
     public boolean moveSnowball(Direction direction, Snowball snowball) {
         return snowball.move(direction, this);
     }
+
+
 }
