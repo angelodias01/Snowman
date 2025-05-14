@@ -1,31 +1,20 @@
 package pt.ipbeja.estig.po2.snowman.app.gui;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.BoardModel;
 import pt.ipbeja.estig.po2.snowman.app.model.View;
 
-public class SnowmanBoard extends Application {
-    @Override
-    public void start(Stage stage) {
+public class SnowmanBoard extends GridPane implements View {
 
-        //BoardModel boardModel = new BoardModel(10, 10); // Tamanho 10x10
-        //SnowmanBoard snowmanBoard = new SnowmanBoard(boardModel);
+    private BoardModel boardModel;
 
-        //
-        Pane root = new Pane();
-        //root.getChildren().add(snowmanBoard);
-
-        Scene scene = new Scene(root, 800, 600);
-        stage.setScene(scene);
-        stage.show();
-
+    // Construtor que inicializa o SnowmanBoard com o modelo do tabuleiro
+    public SnowmanBoard(BoardModel boardModel) {
+        this.boardModel = boardModel;
+        drawBoard();
     }
 
-    public static void main(String[] args) {
-        launch();
+    private void drawBoard() {
     }
+
 }
