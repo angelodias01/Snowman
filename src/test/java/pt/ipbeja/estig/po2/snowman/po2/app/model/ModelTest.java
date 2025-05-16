@@ -29,8 +29,9 @@ public class ModelTest {
         List<Snowball> snowballs = new ArrayList<>();
         snowballs.add(new Snowball(1, 2, SnowballType.SMALL));
 
-        board = new BoardModel(List.of(grid), monster, snowballs);
+        board = new BoardModel(grid, monster, snowballs); // Removido List.of()
     }
+
 
     @Test
     public void testMonsterToTheLeft() {

@@ -13,6 +13,21 @@ public class BoardModel {
         this.monster = monster;
         this.snowballs = snowballs;
     }
+    /**
+     * Retorna a lista de bolas de neve no tabuleiro
+     * @return Lista de Snowball
+     */
+    public List<Snowball> getSnowballs() {
+        return this.snowballs;
+    }
+    /**
+     * Retorna o monstro do jogo
+     * @return o objeto Monster que representa o monstro no jogo
+     */
+    public Monster getMonster() {
+        return this.monster;
+    }
+
 
     /**
      * Gets the number of rows in the board.
