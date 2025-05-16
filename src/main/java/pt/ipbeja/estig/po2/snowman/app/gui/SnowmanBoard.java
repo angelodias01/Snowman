@@ -1,16 +1,17 @@
 package pt.ipbeja.estig.po2.snowman.app.gui;
 
+
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import pt.ipbeja.estig.po2.snowman.app.model.BoardModel;
-import pt.ipbeja.estig.po2.snowman.app.model.PositionContent;
-import pt.ipbeja.estig.po2.snowman.app.model.View;
+import pt.ipbeja.estig.po2.snowman.app.model.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,10 +23,10 @@ public class SnowmanBoard extends VBox implements View {
     private final TextArea movementsLog;
 
     // Imagens para os elementos do jogo
-    private final Image snowImage = new Image("/images/snow.png");
-    private final Image blockImage = new Image("/images/block.png");
-    private final Image snowmanImage = new Image("/images/snowman.png");
-    private final Image monsterImage = new Image("/images/monster.png");
+    private final Image snowImage = new Image(getClass().getResourceAsStream("/images/snow.jpg"));
+    private final Image blockImage = new Image(getClass().getResourceAsStream("/images/block.png"));
+    private final Image snowmanImage = new Image(getClass().getResourceAsStream("/images/snowman.png"));
+    private final Image monsterImage = new Image(getClass().getResourceAsStream("/images/monster.png"));
 
     public SnowmanBoard(BoardModel boardModel) {
         this.boardModel = boardModel;
@@ -36,6 +37,38 @@ public class SnowmanBoard extends VBox implements View {
 
         setupBoard();
         this.getChildren().addAll(board, movementsLog);
+        
+        // Adicionar handler de teclado
+        this.setOnKeyPressed(this::handleKeyPress);
+        
+        // Importante para receber eventos de teclado
+        this.setFocusTraversable(true);
+    }
+
+    private void handleKeyPress(KeyEvent event) {
+        Direction direction = null;
+        switch (event.getCode()) {
+            case UP -> direction = Direction.UP;
+            case DOWN -> direction = Direction.DOWN;
+            case LEFT -> direction = Direction.LEFT;
+            case RIGHT -> direction = Direction.RIGHT;
+        }
+
+        if (direction != null) {
+            boolean moved = boardModel.moveMonster(direction);
+            if (moved) {
+                movementsLog.appendText("Monstro moveu para " + direction + "\n");
+                updateBoard();
+            }
+        }
+        
+        // Consumir o evento para evitar propagação
+        event.consume();
+    }
+
+    @Override
+    public void updateBoard() {
+        setupBoard();
     }
 
     private void setupBoard() {
@@ -71,25 +104,32 @@ public class SnowmanBoard extends VBox implements View {
         cell.setMinSize(50, 50);
         cell.setStyle("-fx-border-color: black; -fx-alignment: center;");
 
-        PositionContent content = boardModel.getPositionContent(row, col);
         ImageView imageView = new ImageView();
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
 
-        switch (content) {
-            case NO_SNOW -> cell.setStyle("-fx-background-color: white; -fx-border-color: black;");
-            case SNOW -> imageView.setImage(snowImage);
-            case BLOCK -> imageView.setImage(blockImage);
-            case SNOWMAN -> imageView.setImage(snowmanImage);
+        // Verificar monstro primeiro
+        if (boardModel.getMonster().getRow() == row && 
+            boardModel.getMonster().getCol() == col) {
+            imageView.setImage(monsterImage);
+        } else {
+            // Verificar bolas de neve
+            Snowball snowball = boardModel.snowballInPosition(row, col);
+            if (snowball != null) {
+                imageView.setImage(snowImage);
+            } else {
+                // Verificar outros conteúdos
+                PositionContent content = boardModel.getPositionContent(row, col);
+                switch (content) {
+                    case NO_SNOW -> cell.setStyle("-fx-background-color: white; -fx-border-color: black;");
+                    case SNOW -> imageView.setImage(snowImage);
+                    case BLOCK -> imageView.setImage(blockImage);
+                    case SNOWMAN -> imageView.setImage(snowmanImage);
+                }
+            }
         }
 
         cell.setGraphic(imageView);
-
-        // Adicionar evento de clique
-        final int finalRow = row;
-        final int finalCol = col;
-        cell.setOnMouseClicked(event -> handleCellClick(finalRow, finalCol));
-
         return cell;
     }
 
@@ -132,10 +172,5 @@ public class SnowmanBoard extends VBox implements View {
 
     private void resetGame() {
         // Implementar reset do jogo
-    }
-
-    @Override
-    public void updateBoard() {
-        setupBoard();
     }
 }

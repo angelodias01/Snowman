@@ -5,11 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import pt.ipbeja.estig.po2.snowman.app.model.BoardModel;
-import pt.ipbeja.estig.po2.snowman.app.model.Direction;
-import pt.ipbeja.estig.po2.snowman.app.model.Monster;
-import pt.ipbeja.estig.po2.snowman.app.model.PositionContent;
-import pt.ipbeja.estig.po2.snowman.app.model.Snowball;
+import pt.ipbeja.estig.po2.snowman.app.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +14,7 @@ public class SnowmanGUI extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Create the board model with an example configuration (e.g., 5x5 board)
+        // Criar um tabuleiro 5x5
         List<List<PositionContent>> grid = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             List<PositionContent> row = new ArrayList<>();
@@ -27,27 +23,36 @@ public class SnowmanGUI extends Application {
             }
             grid.add(row);
         }
+
+        // Adicionar alguns elementos ao tabuleiro
         grid.get(2).set(2, PositionContent.SNOW);
-        Monster monster = new Monster(1, 1);
+        grid.get(1).set(1, PositionContent.SNOW);
+        grid.get(3).set(3, PositionContent.SNOW);
+
+        // Criar o monstro e as bolas de neve
+        Monster monster = new Monster(0, 0);
         List<Snowball> snowballs = new ArrayList<>();
-        snowballs.add(new Snowball(2, 3, pt.ipbeja.estig.po2.snowman.app.model.SnowballType.SMALL));
+        snowballs.add(new Snowball(2, 3, SnowballType.SMALL));
+        snowballs.add(new Snowball(1, 2, SnowballType.MID));
+
+        // Criar o modelo do tabuleiro
         BoardModel boardModel = new BoardModel(grid, monster, snowballs);
 
-        // Create and initialize the SnowmanBoard
+        // Criar e inicializar o SnowmanBoard
         SnowmanBoard snowmanBoard = new SnowmanBoard(boardModel);
 
-        // Create the root pane
+        // Criar o layout raiz
         BorderPane root = new BorderPane();
-        root.setCenter(snowmanBoard); // Add the board to the center of the layout
+        root.setCenter(snowmanBoard);
 
-        // Example: Trigger updates (e.g., move monster or snowballs)
-        boardModel.moveMonster(Direction.RIGHT);
-        snowmanBoard.updateBoard(); // Refresh the display
-
-        // Setup the scene and stage
+        // Configurar a cena e o palco
         Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
-        stage.setTitle("Snowman Game");
+        stage.setTitle("Jogo do Boneco de Neve");
+
+        // Requisitar foco para o tabuleiro
+        snowmanBoard.requestFocus();
+
         stage.show();
     }
 
