@@ -23,7 +23,7 @@ public class SnowmanBoard extends VBox implements View {
     private final TextArea movementsLog;
 
     // Imagens para os elementos do jogo
-    private final Image snowImage = new Image(getClass().getResourceAsStream("/images/snow.jpg"));
+    private final Image snowImage = new Image(getClass().getResourceAsStream("/images/snow.png"));
     private final Image blockImage = new Image(getClass().getResourceAsStream("/images/block.png"));
     private final Image snowmanImage = new Image(getClass().getResourceAsStream("/images/snowman.png"));
     private final Image monsterImage = new Image(getClass().getResourceAsStream("/images/monster.png"));
@@ -37,10 +37,10 @@ public class SnowmanBoard extends VBox implements View {
 
         setupBoard();
         this.getChildren().addAll(board, movementsLog);
-        
+
         // Adicionar handler de teclado
         this.setOnKeyPressed(this::handleKeyPress);
-        
+
         // Importante para receber eventos de teclado
         this.setFocusTraversable(true);
     }
@@ -61,7 +61,7 @@ public class SnowmanBoard extends VBox implements View {
                 updateBoard();
             }
         }
-        
+
         // Consumir o evento para evitar propagação
         event.consume();
     }
@@ -109,14 +109,21 @@ public class SnowmanBoard extends VBox implements View {
         imageView.setFitWidth(40);
 
         // Verificar monstro primeiro
-        if (boardModel.getMonster().getRow() == row && 
+        if (boardModel.getMonster().getRow() == row &&
             boardModel.getMonster().getCol() == col) {
             imageView.setImage(monsterImage);
         } else {
             // Verificar bolas de neve
             Snowball snowball = boardModel.snowballInPosition(row, col);
             if (snowball != null) {
-                imageView.setImage(snowImage);
+                switch (snowball.getType()) {
+                    case SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_small.png")));
+                    case MID -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_mid.png")));
+                    case BIG -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_big.png")));
+                    case MID_SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial1.png")));
+                    case BIG_SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial2.png")));
+                    case BIG_MID -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial3.png")));
+                }
             } else {
                 // Verificar outros conteúdos
                 PositionContent content = boardModel.getPositionContent(row, col);

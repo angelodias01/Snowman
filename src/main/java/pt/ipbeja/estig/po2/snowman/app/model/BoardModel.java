@@ -84,17 +84,35 @@ public class BoardModel {
      * @return true if the move was successful.
      */
     public boolean moveMonster(Direction direction) {
+        int newRow = monster.getRow() + direction.getDeltaRow();
+        int newCol = monster.getCol() + direction.getDeltaCol();
+
+        // Verifica se a nova posição é válida
+        if (!validPosition(newRow, newCol)) {
+            return false;
+        }
+
+        // Verifica se há uma bola de neve na posição
+        Snowball snowball = snowballInPosition(newRow, newCol);
+        if (snowball != null) {
+            // Se houver uma bola de neve, tenta movê-la também
+            if (!moveSnowball(direction, snowball)) {
+                return false;
+            }
+        }
+
+        // Guarda a posição anterior do monstro
         int prevRow = monster.getRow();
         int prevCol = monster.getCol();
 
-        // Attempt to move the monster
+        // Move o monstro
         if (monster.move(direction, this)) {
-            // Update the board state
+            // Atualiza o tabuleiro
             this.setPositionContent(prevRow, prevCol, PositionContent.NO_SNOW);
             this.setPositionContent(monster.getRow(), monster.getCol(), PositionContent.SNOWMAN);
             return true;
         }
-        return false; // Move was not valid
+        return false;
     }
 
     /**
