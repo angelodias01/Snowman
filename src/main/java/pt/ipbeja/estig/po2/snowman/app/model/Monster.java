@@ -48,8 +48,14 @@ public class Monster extends MobileElement {
         }
 
         // Se chegou aqui, podemos mover o monstro
+        // Remove a neve da posição atual
+        board.setPositionContent(this.row, this.col, PositionContent.NO_SNOW);
+        
         this.row = newRow;
         this.col = newCol;
+        
+        // Remove a neve da nova posição
+        board.setPositionContent(this.row, this.col, PositionContent.NO_SNOW);
 
         return true;
     }

@@ -19,10 +19,11 @@ public class SnowmanGUI extends Application {
         for (int i = 0; i < 5; i++) {
             List<PositionContent> row = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
-                row.add(PositionContent.NO_SNOW);
+                row.add(PositionContent.SNOW); // Alterado de NO_SNOW para SNOW
             }
             grid.add(row);
         }
+
 
         // Adicionar alguns elementos ao tabuleiro
         grid.get(2).set(2, PositionContent.SNOW);
@@ -34,6 +35,7 @@ public class SnowmanGUI extends Application {
         List<Snowball> snowballs = new ArrayList<>();
         snowballs.add(new Snowball(2, 3, SnowballType.SMALL));
         snowballs.add(new Snowball(1, 2, SnowballType.MID));
+        snowballs.add(new Snowball(3, 1, SnowballType.BIG));  
 
         // Criar o modelo do tabuleiro
         BoardModel boardModel = new BoardModel(grid, monster, snowballs);
