@@ -207,34 +207,12 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     private void handleCellClick(int row, int col) {
-        // Implementar lógica de movimento aqui
         // Registrar movimento no log
         String move = String.format("(%d, %c) -> (%d, %c)",
             row + 1, (char)('A' + col), row + 1, (char)('A' + col));
         movementsLog.appendText(move + "\n");
 
-        // Verificar se o jogo terminou após o movimento
-        checkGameEnd();
-    }
-
-    private void checkGameEnd() {
-        if (isGameComplete()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Jogo Completo");
-            alert.setHeaderText("Parabéns! Você completou o nível!");
-            alert.setContentText("Deseja jogar novamente?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                saveGameToFile();
-                resetGame();
-            }
-        }
-    }
-
-    private boolean isGameComplete() {
-        // Implementar lógica para verificar se o boneco de neve está completo
-        return false; // Temporário
+        // A verificação de fim de jogo já é feita no updateBoard()
     }
 
     private void saveGameToFile() {
