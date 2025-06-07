@@ -1,37 +1,79 @@
-import java.util.ArrayList;
-import java.util.List;
+``` markdown
+# Snowman
 
-public class GameState {
-    private final List<List<PositionContent>> boardState;
-    private final Monster monsterState;
-    private final List<Snowball> snowballsState;
+Snowman is a Java-based game that offers puzzle-solving gameplay where you move and interact with various game elements on the board, including snowmen, monsters, and obstacles.
 
-    public GameState(BoardModel board) {
-        // Criar cópia profunda do estado atual do tabuleiro
-        this.boardState = new ArrayList<>();
-        for (List<PositionContent> row : board.getBoard()) {
-            this.boardState.add(new ArrayList<>(row));
-        }
-        
-        // Criar cópia do estado do monstro
-        this.monsterState = new Monster(board.getMonster().getRow(), board.getMonster().getCol());
-        
-        // Criar cópia das bolas de neve
-        this.snowballsState = new ArrayList<>();
-        for (Snowball snowball : board.getSnowballs()) {
-            this.snowballsState.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
-        }
-    }
+---
 
-    public List<List<PositionContent>> getBoardState() {
-        return boardState;
-    }
+## 🕹️ Features
 
-    public Monster getMonsterState() {
-        return monsterState;
-    }
+- **Graphical User Interface:** Smooth and interactive visual experience.
+- **Rich Game Mechanics:** Move snowballs, avoid monsters, and solve each level's unique challenges.
+- **Level Management:** Progress through multiple levels, each with its own objectives and complexity.
+- **Object-Oriented Design:** Well-structured codebase for easy maintenance and extension.
 
-    public List<Snowball> getSnowballsState() {
-        return snowballsState;
-    }
-}
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Java 17** or higher
+- **Maven** build tool
+
+### Installation
+
+Clone the repository:
+```
+sh git clone <your-repository-url> cd Snowman
+``` 
+
+Build the application:
+```
+sh mvn clean install
+``` 
+
+### Running the Game
+
+After building, you can launch the game with:
+```
+sh mvn exec:java -Dexec.mainClass="pt.ipbeja.estig.po2.snowman.app.gui.SnowmanGUI"
+``` 
+
+> Replace the main class if a different one is used for launching the GUI.
+
+---
+
+## 📂 Project Structure
+
+- `src/main/java/pt/ipbeja/estig/po2/snowman/app/gui/`  
+  Graphical user interface (GUI) components
+- `src/main/java/pt/ipbeja/estig/po2/snowman/app/model/`  
+  Core game logic and mechanics
+- `src/main/resources/`  
+  Static resources and configuration files
+
+---
+
+## 📦 Technologies
+
+- Java 17
+- Maven
+- Swing or similar Java GUI framework
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request with your improvements.
+
+---
+
+## 📝 License
+
+Include your license information here (MIT, Apache 2.0, etc.).
+
+---
+
+**For questions or support, please open an issue in this repository.**
+```
