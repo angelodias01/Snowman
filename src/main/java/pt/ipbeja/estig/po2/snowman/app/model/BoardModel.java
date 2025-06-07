@@ -233,13 +233,11 @@ public List<List<PositionContent>> getBoard() {
      * @return true se houver um boneco de neve completo, false caso contrário
      */
     public boolean isLevelComplete() {
-        // Verificar se há alguma bola de neve completamente montada
-        for (int row = 0; row < getRows(); row++) {
-            for (int col = 0; col < getCols(); col++) {
-                Snowball snowball = snowballInPosition(row, col);
-                if (snowball != null && 
-                    snowball.getType() == SnowballType.COMPLETE) {
-                    return true;
+    // Verificar se existe um boneco de neve completo no tabuleiro
+    for (int row = 0; row < getRows(); row++) {
+        for (int col = 0; col < getCols(); col++) {
+            if (getPositionContent(row, col) == PositionContent.SNOWMAN) {
+                return true;
             }
         }
     }
