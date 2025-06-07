@@ -24,21 +24,21 @@ Snowman is a Java-based game that offers puzzle-solving gameplay where you move 
 ### Installation
 
 Clone the repository:
-```
+
 sh git clone <your-repository-url> cd Snowman
-``` 
+
 
 Build the application:
-```
+
 sh mvn clean install
-``` 
+
 
 ### Running the Game
 
 After building, you can launch the game with:
-```
+
 sh mvn exec:java -Dexec.mainClass="pt.ipbeja.estig.po2.snowman.app.gui.SnowmanGUI"
-``` 
+
 
 > Replace the main class if a different one is used for launching the GUI.
 
@@ -65,13 +65,14 @@ sh mvn exec:java -Dexec.mainClass="pt.ipbeja.estig.po2.snowman.app.gui.SnowmanGU
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request with your improvements.
+Ângelo Dias
+Edgar Brito
 
 ---
 
 ## 📝 License
 
-Include your license information here (MIT, Apache 2.0, etc.).
+IPBEJA PO2 Snowman
 
 ---
 
