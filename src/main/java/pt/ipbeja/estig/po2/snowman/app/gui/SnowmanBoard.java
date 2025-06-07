@@ -194,7 +194,7 @@ public class SnowmanBoard extends VBox implements View {
                 // Verificar outros conteúdos
                 PositionContent content = boardModel.getPositionContent(row, col);
                 switch (content) {
-                    case NO_SNOW -> cell.setStyle("-fx-background-color: white; -fx-border-color: black;");
+                    case NO_SNOW -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/grass.png")));
                     case SNOW -> imageView.setImage(snowImage);
                     case BLOCK -> imageView.setImage(blockImage);
                     case SNOWMAN -> imageView.setImage(snowmanImage);

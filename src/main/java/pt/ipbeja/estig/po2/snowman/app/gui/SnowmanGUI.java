@@ -60,8 +60,8 @@ public class SnowmanGUI extends Application {
         Monster monster = new Monster(0, 0);
         List<Snowball> snowballs = new ArrayList<>();
         snowballs.add(new Snowball(2, 3, SnowballType.SMALL));
-        snowballs.add(new Snowball(1, 2, SnowballType.MID));
-        snowballs.add(new Snowball(3, 1, SnowballType.BIG));
+        snowballs.add(new Snowball(1, 2, SnowballType.SMALL));
+        snowballs.add(new Snowball(3, 1, SnowballType.SMALL));
 
         return new BoardModel(grid, monster, snowballs);
     }
