@@ -170,8 +170,8 @@ public class SnowmanBoard extends VBox implements View {
         cell.setStyle("-fx-border-color: black; -fx-alignment: center;");
 
         ImageView imageView = new ImageView();
-        imageView.setFitHeight(40);
-        imageView.setFitWidth(40);
+        imageView.setFitHeight(45);
+        imageView.setFitWidth(45);
 
         // Verificar monstro primeiro
         if (boardModel.getMonster().getRow() == row &&
