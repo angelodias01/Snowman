@@ -1,5 +1,6 @@
 package pt.ipbeja.estig.po2.snowman.app.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -10,14 +11,6 @@ public class BoardModel {
     private final List<Snowball> snowballs;
     // ... outros atributos existentes ...
     private final Stack<GameState> history;
-    
-    public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
-        this.board = board;
-        this.monster = monster;
-        this.snowballs = snowballs;
-        // ... construtor existente ...
-        this.history = new Stack<>();
-    }
     
     /**
      * Retorna a lista de bolas de neve no tabuleiro
@@ -183,5 +176,73 @@ public class BoardModel {
  */
 public List<List<PositionContent>> getBoard() {
     return this.board;
+}
+    private final List<List<PositionContent>> initialBoard; // Nova variável para guardar estado inicial
+    private final int initialMonsterRow; // Posição inicial do monstro
+    private final int initialMonsterCol;
+    private final List<Snowball> initialSnowballs; // Estado inicial das bolas de neve
+
+    public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
+        this.board = board;
+        this.monster = monster;
+        this.snowballs = snowballs;
+        this.history = new Stack<>();
+        
+        // Guardar estado inicial
+        this.initialBoard = new ArrayList<>();
+        for (List<PositionContent> row : board) {
+            this.initialBoard.add(new ArrayList<>(row));
+        }
+        this.initialMonsterRow = monster.getRow();
+        this.initialMonsterCol = monster.getCol();
+        
+        // Copiar bolas de neve iniciais
+        this.initialSnowballs = new ArrayList<>();
+        for (Snowball snowball : snowballs) {
+            this.initialSnowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
+        }
+    }
+
+    /**
+     * Reinicia o nível para o estado inicial
+     */
+    public void resetLevel() {
+        // Limpar histórico
+        this.history.clear();
+        
+        // Restaurar tabuleiro
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).size(); j++) {
+                board.get(i).set(j, initialBoard.get(i).get(j));
+            }
+        }
+        
+        // Restaurar monstro
+        monster.setRow(initialMonsterRow);
+        monster.setCol(initialMonsterCol);
+        
+        // Restaurar bolas de neve
+        snowballs.clear();
+        for (Snowball snowball : initialSnowballs) {
+            snowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
+        }
+    }
+
+    /**
+     * Verifica se existe um boneco de neve completo no tabuleiro
+     * @return true se houver um boneco de neve completo, false caso contrário
+     */
+    public boolean isLevelComplete() {
+        // Verificar se há alguma bola de neve completamente montada
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                Snowball snowball = snowballInPosition(row, col);
+                if (snowball != null && 
+                    snowball.getType() == SnowballType.COMPLETE) {
+                    return true;
+            }
+        }
+    }
+    return false;
 }
 }
