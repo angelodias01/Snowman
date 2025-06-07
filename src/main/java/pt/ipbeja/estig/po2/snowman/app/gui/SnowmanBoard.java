@@ -16,6 +16,7 @@ import pt.ipbeja.estig.po2.snowman.app.model.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import javafx.scene.input.KeyCode;
 
 public class SnowmanBoard extends VBox implements View {
     private final BoardModel boardModel;
@@ -41,30 +42,43 @@ public class SnowmanBoard extends VBox implements View {
         // Adicionar handler de teclado
         this.setOnKeyPressed(this::handleKeyPress);
 
+
+
         // Importante para receber eventos de teclado
         this.setFocusTraversable(true);
     }
 
     private void handleKeyPress(KeyEvent event) {
-        Direction direction = null;
-        switch (event.getCode()) {
-            case UP -> direction = Direction.UP;
-            case DOWN -> direction = Direction.DOWN;
-            case LEFT -> direction = Direction.LEFT;
-            case RIGHT -> direction = Direction.RIGHT;
+    // Verificar primeiro se é CTRL+Z para undo
+    if (event.isControlDown() && event.getCode() == KeyCode.Z) {
+        if (boardModel.undo()) {
+            movementsLog.appendText("Movimento desfeito\n");
+            updateBoard();
         }
-
-        if (direction != null) {
-            boolean moved = boardModel.moveMonster(direction);
-            if (moved) {
-                movementsLog.appendText("Monstro moveu para " + direction + "\n");
-                updateBoard();
-            }
-        }
-
-        // Consumir o evento para evitar propagação
         event.consume();
+        return;
     }
+
+    // Código existente para movimentação
+    Direction direction = null;
+    switch (event.getCode()) {
+        case UP -> direction = Direction.UP;
+        case DOWN -> direction = Direction.DOWN;
+        case LEFT -> direction = Direction.LEFT;
+        case RIGHT -> direction = Direction.RIGHT;
+    }
+
+    if (direction != null) {
+        boolean moved = boardModel.moveMonster(direction);
+        if (moved) {
+            movementsLog.appendText("Monstro moveu para " + direction + "\n");
+            updateBoard();
+        }
+    }
+
+    // Consumir o evento para evitar propagação
+    event.consume();
+}
 
     @Override
     public void updateBoard() {
