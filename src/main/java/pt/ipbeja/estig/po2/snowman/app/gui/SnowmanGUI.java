@@ -70,6 +70,9 @@ public class SnowmanGUI extends Application {
      * Handler chamado quando um nível é completado
      */
     private void handleLevelComplete(Void unused) {
+        // Salvar o jogo primeiro
+        snowmanBoard.saveGameToFile();
+        
         if (levelManager.hasNextLevel()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Nível Completo");
