@@ -13,6 +13,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -215,13 +221,77 @@ public class SnowmanBoard extends VBox implements View {
         // A verificação de fim de jogo já é feita no updateBoard()
     }
 
-    private void saveGameToFile() {
+    void saveGameToFile() {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String filename = "snowman" + timestamp + ".txt";
-        // Implementar salvamento do arquivo
-    }
 
-    private void resetGame() {
-        // Implementar reset do jogo
+        try {
+            // Obter o caminho para a pasta Documentos
+            String documentsPath = System.getProperty("user.home") + "/Documents";
+
+            // Criar o caminho para a pasta Snowman dentro de Documentos
+            Path snowmanPath = Paths.get(documentsPath, "Snowman");
+
+            // Criar a pasta se não existir
+            if (!Files.exists(snowmanPath)) {
+                Files.createDirectories(snowmanPath);
+            }
+
+            // Criar o caminho completo do arquivo
+            Path filePath = snowmanPath.resolve(filename);
+
+            // Salvar o arquivo
+            try (PrintWriter writer = new PrintWriter(new FileWriter(filePath.toFile()))) {
+                // 1. Salvar o mapa
+                writer.println("=== MAPA UTILIZADO ===");
+                for (int i = 0; i < boardModel.getRows(); i++) {
+                    for (int j = 0; j < boardModel.getCols(); j++) {
+                        PositionContent content = boardModel.getPositionContent(i, j);
+                        writer.print(switch (content) {
+                            case SNOW -> "S ";
+                            case NO_SNOW -> "- ";
+                            case BLOCK -> "B ";
+                            case SNOWMAN -> "M ";
+                        });
+                    }
+                    writer.println();
+                }
+
+                // 2. Salvar movimentos
+                writer.println("\n=== MOVIMENTOS REALIZADOS ===");
+                writer.println(movementsLog.getText());
+
+                // 3. Quantidade de movimentos
+                long moveCount = movementsLog.getText().lines().count();
+                writer.println("\n=== TOTAL DE MOVIMENTOS ===");
+                writer.println(moveCount);
+
+                // 4. Posição do boneco de neve
+                writer.println("\n=== POSIÇÃO DO BONECO DE NEVE ===");
+                for (int i = 0; i < boardModel.getRows(); i++) {
+                    for (int j = 0; j < boardModel.getCols(); j++) {
+                        if (boardModel.getPositionContent(i, j) == PositionContent.SNOWMAN) {
+                            writer.printf("(%d, %c)%n", i + 1, (char)('A' + j));
+                            break;
+                        }
+                    }
+                }
+
+                // Mostrar mensagem de sucesso
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Arquivo Salvo");
+                alert.setHeaderText("Jogo salvo com sucesso!");
+                alert.setContentText("O arquivo foi salvo em:\n" + filePath.toString());
+                alert.showAndWait();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Erro ao salvar o arquivo");
+            alert.setContentText("Não foi possível salvar o arquivo do jogo: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }
