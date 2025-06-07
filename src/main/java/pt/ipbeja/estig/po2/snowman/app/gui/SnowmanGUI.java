@@ -3,7 +3,6 @@ package pt.ipbeja.estig.po2.snowman.app.gui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
 import javafx.scene.control.Alert;
@@ -82,6 +81,9 @@ public class SnowmanGUI extends Application {
                 // Carregar próximo nível
                 this.boardModel = levelManager.loadNextLevel();
                 snowmanBoard.loadNewLevel(boardModel);
+                // Atualizar título da janela
+                Stage stage = (Stage) snowmanBoard.getScene().getWindow();
+                stage.setTitle("Jogo do Boneco de Neve - Nível " + (levelManager.getCurrentLevelIndex() + 1));
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
