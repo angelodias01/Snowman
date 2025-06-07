@@ -10,6 +10,14 @@ public abstract class MobileElement {
         this.col = col;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
     // Metodos para obter a linha e a coluna do elemento
     public int getRow() {
         return row;

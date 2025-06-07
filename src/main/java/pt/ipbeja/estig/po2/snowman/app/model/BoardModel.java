@@ -1,18 +1,17 @@
 package pt.ipbeja.estig.po2.snowman.app.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class BoardModel {
 
     private final List<List<PositionContent>> board;
     private final Monster monster;
     private final List<Snowball> snowballs;
-
-    public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
-        this.board = board;
-        this.monster = monster;
-        this.snowballs = snowballs;
-    }
+    // ... outros atributos existentes ...
+    private final Stack<GameState> history;
+    
     /**
      * Retorna a lista de bolas de neve no tabuleiro
      * @return Lista de Snowball
@@ -78,23 +77,52 @@ public class BoardModel {
 
 
     /**
-     * Moves the monster in the given direction if valid.
-     *
-     * @param direction The direction to move the monster.
-     * @return true if the move was successful.
+     * Guarda o estado atual do jogo antes de fazer uma jogada
+     */
+    private void saveState() {
+        history.push(new GameState(this));
+    }
+    
+    /**
+     * Desfaz a última jogada, restaurando o estado anterior
+     * @return true se foi possível desfazer, false se não houver jogadas para desfazer
+     */
+    public boolean undo() {
+        if (history.isEmpty()) {
+            return false;
+        }
+        
+        GameState previousState = history.pop();
+        
+        // Restaurar o estado do tabuleiro
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).size(); j++) {
+                board.get(i).set(j, previousState.getBoardState().get(i).get(j));
+            }
+        }
+        
+        // Restaurar posição do monstro
+        monster.setRow(previousState.getMonsterState().getRow());
+        monster.setCol(previousState.getMonsterState().getCol());
+        
+        // Restaurar estado das bolas de neve
+        snowballs.clear();
+        snowballs.addAll(previousState.getSnowballsState());
+        
+        return true;
+    }
+    
+    /**
+     * Modificar o método moveMonster para salvar o estado antes do movimento
      */
     public boolean moveMonster(Direction direction) {
-        int prevRow = monster.getRow();
-        int prevCol = monster.getCol();
-
-        // Attempt to move the monster
-        if (monster.move(direction, this)) {
-            // Update the board state
-            this.setPositionContent(prevRow, prevCol, PositionContent.NO_SNOW);
-            this.setPositionContent(monster.getRow(), monster.getCol(), PositionContent.SNOWMAN);
-            return true;
+        saveState(); // Salvar estado antes do movimento
+        
+        boolean moved = monster.move(direction, this);
+        if (!moved) {
+            history.pop(); // Se o movimento falhou, remover o estado salvo
         }
-        return false; // Move was not valid
+        return moved;
     }
 
     /**
@@ -142,5 +170,79 @@ public class BoardModel {
         return snowball.move(direction, this);
     }
 
+/**
+ * Retorna o tabuleiro atual do jogo
+ * @return Lista bidimensional representando o tabuleiro
+ */
+public List<List<PositionContent>> getBoard() {
+    return this.board;
+}
+    private final List<List<PositionContent>> initialBoard; // Nova variável para guardar estado inicial
+    private final int initialMonsterRow; // Posição inicial do monstro
+    private final int initialMonsterCol;
+    private final List<Snowball> initialSnowballs; // Estado inicial das bolas de neve
 
+    public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
+        this.board = board;
+        this.monster = monster;
+        this.snowballs = snowballs;
+        this.history = new Stack<>();
+        
+        // Guardar estado inicial
+        this.initialBoard = new ArrayList<>();
+        for (List<PositionContent> row : board) {
+            this.initialBoard.add(new ArrayList<>(row));
+        }
+        this.initialMonsterRow = monster.getRow();
+        this.initialMonsterCol = monster.getCol();
+        
+        // Copiar bolas de neve iniciais
+        this.initialSnowballs = new ArrayList<>();
+        for (Snowball snowball : snowballs) {
+            this.initialSnowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
+        }
+    }
+
+    /**
+     * Reinicia o nível para o estado inicial
+     */
+    public void resetLevel() {
+        // Limpar histórico
+        this.history.clear();
+        
+        // Restaurar tabuleiro
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).size(); j++) {
+                board.get(i).set(j, initialBoard.get(i).get(j));
+            }
+        }
+        
+        // Restaurar monstro
+        monster.setRow(initialMonsterRow);
+        monster.setCol(initialMonsterCol);
+        
+        // Restaurar bolas de neve
+        snowballs.clear();
+        for (Snowball snowball : initialSnowballs) {
+            snowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
+        }
+    }
+
+    /**
+     * Verifica se existe um boneco de neve completo no tabuleiro
+     * @return true se houver um boneco de neve completo, false caso contrário
+     */
+    public boolean isLevelComplete() {
+        // Verificar se há alguma bola de neve completamente montada
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                Snowball snowball = snowballInPosition(row, col);
+                if (snowball != null && 
+                    snowball.getType() == SnowballType.COMPLETE) {
+                    return true;
+            }
+        }
+    }
+    return false;
+}
 }
