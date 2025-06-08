@@ -19,13 +19,6 @@ import java.io.InputStream;
  * - Cannot play multiple audio tracks simultaneously
  * - No volume control functionality
  * <p>
- * Usage Example:
- * <pre>
- *     GameAudio audioPlayer = new GameAudio();
- *     audioPlayer.play("background.wav"); // Starts looping playback of the specified audio
- *     audioPlayer.stop(); // Stops playback and releases resources
- * </pre>
- * <p>
  * Threading Note:
  * This class is not designed for concurrent use. Ensure that method invocations occur on the same thread.
  *
@@ -88,20 +81,4 @@ public class GameAudio {
             clip.close(); // Release resources
         }
     }
-
-    // Additional implementation details and considerations
-    /**
-     * Implementation Notes:
-     * - Utilizes Java's `javax.sound.sampled` API for cross-platform audio support.
-     * - Audio streaming is buffered to improve performance and reliability.
-     *
-     * Known Limitations:
-     * - Does not support advanced audio features (e.g., volume control, fade in/out effects).
-     * - File validation relies on file presence and correct format (WAV).
-     *
-     * Future Improvements:
-     * - Add support for multiple concurrent audio tracks (e.g., independent sound effects).
-     * - Implement volume control for finer audio management.
-     * - Expand supported file formats beyond WAV.
-     */
 }

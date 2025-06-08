@@ -162,9 +162,9 @@ public class LevelManager {
      */
     public BoardModel loadNextLevel() {
         if (hasNextLevel()) {
-            currentLevelIndex++; // Move to the next level
+            currentLevelIndex++;
             return getCurrentLevel();
         }
-        return null; // No more levels to load
+        return null;
     }
 }

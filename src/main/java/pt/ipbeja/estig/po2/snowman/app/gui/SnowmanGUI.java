@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -77,7 +76,7 @@ public class SnowmanGUI extends Application {
         root.setCenter(snowmanBoard);
         root.setRight(leaderboardPanel);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 800, 400);
         stage.setScene(scene);
         stage.setTitle("SnowMan Game - Level 1");
 
@@ -197,7 +196,7 @@ public class SnowmanGUI extends Application {
      * The panel is padded and organized vertically.
      */
     private void createLeaderboardPanel() {
-        leaderboardPanel = new VBox(10);  // usando valor direto ao invés de PADDING_VALUE
+        leaderboardPanel = new VBox(10);
         leaderboardPanel.setPadding(new javafx.geometry.Insets(10, 10, 10, 10));
 
         javafx.scene.control.Label titleLabel = new javafx.scene.control.Label("LEADERBOARD");

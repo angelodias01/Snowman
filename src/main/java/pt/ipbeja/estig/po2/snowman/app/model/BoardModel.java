@@ -38,6 +38,7 @@ public class BoardModel {
     private final List<Snowball> snowballs;
     private final Stack<GameState> history;
     private final Stack<GameState> redoHistory;
+    
 
     /**
      * Initial state storage for level reset functionality:

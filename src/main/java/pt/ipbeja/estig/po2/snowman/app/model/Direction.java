@@ -13,12 +13,6 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Immutable design
  * - Grid-based movement support
  * <p>
- * Usage example:
- * <pre>
- *     Direction dir = Direction.UP;
- *     int newRow = currentRow + dir.getDeltaRow();
- *     int newCol = currentCol + dir.getDeltaCol();
- * </pre>
  *
  * @author Ângelo Dias, Edgar Brito
  */
@@ -91,17 +85,4 @@ public enum Direction {
     public int getDeltaCol() {
         return deltaCol;
     }
-
-    /**
-     * Technical Notes:
-     * - Thread-safe due to enum implementation
-     * - Immutable design prevents state-related bugs
-     * - Memory efficient with only four instances
-     * - Coordinate system assumes top-left origin (0,0)
-     * - Positive Y-axis points downward (standard computer graphics convention)
-     *
-     * Limitations:
-     * - Only supports cardinal directions (no diagonals)
-     * - Fixed step size of 1 unit
-     */
 }

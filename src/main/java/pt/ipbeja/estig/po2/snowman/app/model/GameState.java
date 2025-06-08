@@ -20,17 +20,6 @@ import java.util.List;
  * - Deep copying of game board, monster, and snowball data for immutability
  * - Optimized for repeated operations like state saving, retrieval, and comparison
  * <p>
- * Usage Example:
- * <pre>
- *     // Create a snapshot of the game state
- *     GameState snapshot = new GameState(boardModel);
- *
- *     // Access stored game elements
- *     List<List<PositionContent>> savedBoard = snapshot.getBoardState();
- *     Monster savedMonster = snapshot.getMonsterState();
- *     List<Snowball> savedSnowballs = snapshot.getSnowballsState();
- * </pre>
- * <p>
  * Thread-Safety Note:
  * - Instances of GameState are immutable and inherently thread-safe.
  * - However, concurrent access to the BoardModel instance used to create snapshots should be synchronized externally.
@@ -109,18 +98,5 @@ public class GameState {
         return snowballsState;
     }
 
-    /**
-     * Implementation Details:
-     * - Immutability: All fields are final and initialized with deep copies, ensuring the snapshot is immutable.
-     * - Deep Copying: Prevents unexpected mutations by other parts of the code that access the original objects.
-     * - Optimized for Undo/Redo: Ensures safe and efficient restoration of previous game states.
-     *
-     * Known Limitations:
-     * - Requires additional memory for deep copies, which could be significant for large boards or history stacks.
-     * - Only stores state changes explicitly captured by the BoardModel (e.g., auxiliary state not tied to the board, monster, or snowballs is not saved).
-     *
-     * Future Enhancements:
-     * - Introduce partial state-saving mechanisms for better performance in scenarios with frequent minor changes.
-     * - Add support for additional game state attributes, if required, such as level-specific metadata.
-     */
+
 }

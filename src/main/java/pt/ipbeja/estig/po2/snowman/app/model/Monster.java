@@ -79,37 +79,6 @@ public class Monster extends MobileElement {
     }
 
     /**
-     * Checks if the monster can move to a specific position on the board.
-     * <p>
-     * This method validates if the target position is within bounds and checks
-     * whether any snowballs in the intended path can also be moved.
-     *
-     * @param newRow The new row position to check.
-     * @param newCol The new column position to check.
-     * @param board  The game board model.
-     * @return true if the move is valid; false otherwise.
-     */
-    private boolean canMoveTo(int newRow, int newCol, BoardModel board) {
-        // Validate if the position is within the board's boundaries
-        if (!board.validPosition(newRow, newCol)) {
-            return false;
-        }
-
-        // Check if there is a snowball at the position
-        Snowball snowball = board.snowballInPosition(newRow, newCol);
-        if (snowball != null) {
-            // If a snowball is present, validate if it can be moved
-            int snowballNewRow = snowball.getRow() + (newRow - this.row);
-            int snowballNewCol = snowball.getCol() + (newCol - this.col);
-            return board.validPosition(snowballNewRow, snowballNewCol) &&
-                    board.snowballInPosition(snowballNewRow, snowballNewCol) == null;
-        }
-
-        // If no snowball is present, the position is valid
-        return true;
-    }
-
-    /**
      * Retrieves the current row position of the monster.
      *
      * @return The monster's current row position.
