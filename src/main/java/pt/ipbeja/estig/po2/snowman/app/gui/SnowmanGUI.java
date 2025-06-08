@@ -60,7 +60,7 @@ public class SnowmanGUI extends Application {
         // Configurar a cena e o palco
         Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
-        stage.setTitle("Jogo do Boneco de Neve - Nível 1");
+        stage.setTitle("SnowMan Game - Level 1");
 
         audioPlayer.play("mus1.wav");
 
@@ -104,16 +104,16 @@ public class SnowmanGUI extends Application {
     private void handleLevelComplete(Void unused) {
         if (levelManager.hasNextLevel()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Nível Completo");
-            alert.setHeaderText("Parabéns! Você completou o nível!");
-            alert.setContentText("Deseja ir para o próximo nível?");
+            alert.setTitle("Level Complete");
+            alert.setHeaderText("Congratulations! You've completed the level!");
+            alert.setContentText("Would you like to go to the next level?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 this.boardModel = levelManager.loadNextLevel();
                 snowmanBoard.loadNewLevel(boardModel);
                 Stage stage = (Stage) snowmanBoard.getScene().getWindow();
-                stage.setTitle("Jogo do Boneco de Neve - Nível " + (levelManager.getCurrentLevelIndex() + 1));
+                stage.setTitle("Snowman Game - Level " + (levelManager.getCurrentLevelIndex() + 1));
             }
         } else {
             // Salvar pontuação apenas quando o jogo terminar
@@ -121,18 +121,18 @@ public class SnowmanGUI extends Application {
             updateLeaderboard();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Jogo Completo");
-            alert.setHeaderText("Parabéns!");
-            alert.setContentText("Você completou todos os níveis do jogo!");
+            alert.setTitle("Game Complete");
+            alert.setHeaderText("Congratulations!");
+            alert.setContentText("You've completed all the levels of the game!");
             alert.showAndWait();
         }
     }
 
     private boolean getUserName() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Nome do Jogador");
-        dialog.setHeaderText("Bem-vindo ao Jogo do Boneco de Neve!");
-        dialog.setContentText("Por favor, insira seu nome (máximo 3 caracteres):");
+        dialog.setTitle("Player's name");
+        dialog.setHeaderText("Welcome to the Snowman Game!");
+        dialog.setContentText("Please enter your name (maximum 3 characters):");
 
         dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 3) {
@@ -179,7 +179,7 @@ public class SnowmanGUI extends Application {
             leaderboardListView.getItems().clear();
 
             // Add header
-            leaderboardListView.getItems().add(String.format("%-3s | %-4s | %-10s", "USR", "SCOR", "DATE"));
+            leaderboardListView.getItems().add(String.format("%-3s | %-4s | %-10s", "USER", "SCORE", "DATE"));
             leaderboardListView.getItems().add("--------------------------");
 
             // Add scores

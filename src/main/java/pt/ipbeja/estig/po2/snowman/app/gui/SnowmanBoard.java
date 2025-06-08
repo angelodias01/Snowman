@@ -56,7 +56,7 @@ public class SnowmanBoard extends VBox implements View {
         this.playerName = playerName;
         this.score = 0;
 
-        this.resetButton = new Button("Reiniciar Nível");
+        this.resetButton = new Button("Restart Level");
         this.resetButton.setOnAction(e -> resetLevel());
 
         configureUndoButton();
@@ -79,7 +79,7 @@ public class SnowmanBoard extends VBox implements View {
         this.undoButton = new Button("Undo Move(CTRL+Z)");
         this.undoButton.setOnAction(e -> {
             if (boardModel.undo()) {
-                movementsLog.appendText("Movimento desfeito\n");
+                movementsLog.appendText("Movement undone\n");
                 updateBoard();
             }
         });
@@ -110,9 +110,9 @@ public class SnowmanBoard extends VBox implements View {
     private void resetLevel() {
         // Mostrar diálogo de confirmação
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Reiniciar Nível");
-        alert.setHeaderText("Tem certeza que deseja reiniciar o nível?");
-        alert.setContentText("Todo o progresso será perdido.");
+        alert.setTitle("Restart Level");
+        alert.setHeaderText("Are you sure you want to restart the level?");
+        alert.setContentText("All progress will be lost.");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -120,7 +120,7 @@ public class SnowmanBoard extends VBox implements View {
             boardModel.resetLevel();
             // Limpar o log de movimentos
             movementsLog.clear();
-            movementsLog.appendText("Nível reiniciado\n");
+            movementsLog.appendText("Level restarted\n");
             // Atualizar a visualização
             updateBoard();
             // Retomar o foco para capturar eventos de teclado
@@ -140,7 +140,7 @@ public class SnowmanBoard extends VBox implements View {
         // Verificar primeiro se é CTRL+Z para undo
         if (event.isControlDown() && event.getCode() == KeyCode.Z) {
             if (boardModel.undo()) {
-                movementsLog.appendText("Movimento desfeito\n");
+                movementsLog.appendText("Movement undone\n");
                 updateBoard();
             }
             event.consume();
@@ -150,7 +150,7 @@ public class SnowmanBoard extends VBox implements View {
         // Verificar se é CTRL+X para redo
         if (event.isControlDown() && event.getCode() == KeyCode.X) {
             if (boardModel.redo()) {
-                movementsLog.appendText("Movimento refeito\n");
+                movementsLog.appendText("Movement redone\n");
                 updateBoard();
             }
             event.consume();
@@ -170,7 +170,7 @@ public class SnowmanBoard extends VBox implements View {
             boolean moved = boardModel.moveMonster(direction);
             if (moved) {
                 this.score += 1;  // Add 10 points for each move
-                movementsLog.appendText("Monstro moveu para " + direction + " (Score: " + score + ")\n");
+                movementsLog.appendText("Monster moved to " + direction + " (Score: " + score + ")\n");
                 updateBoard();
             }
         }
@@ -300,7 +300,7 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     private void saveMap(PrintWriter writer) {
-        writer.println("=== MAPA UTILIZADO ===");
+        writer.println("=== MAP USED ===");
 
         for (int i = 0; i < boardModel.getRows(); i++) {
             for (int j = 0; j < boardModel.getCols(); j++) {
@@ -317,18 +317,18 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     private void saveMovements(PrintWriter writer) {
-        writer.println("\n=== MOVIMENTOS REALIZADOS ===");
+        writer.println("\n===  MOVEMENTS MADE ===");
         writer.println(movementsLog.getText());
     }
 
     private void saveMoveCount(PrintWriter writer) {
         long moveCount = movementsLog.getText().lines().count();
-        writer.println("\n=== TOTAL DE MOVIMENTOS ===");
+        writer.println("\n=== TOTAL MOVEMENTS ===");
         writer.println(moveCount);
     }
 
     private void saveSnowmanPosition(PrintWriter writer) {
-        writer.println("\n=== POSIÇÃO DO BONECO DE NEVE ===");
+        writer.println("\n=== POSITION OF THE SNOWMAN ===");
 
         for (int i = 0; i < boardModel.getRows(); i++) {
             for (int j = 0; j < boardModel.getCols(); j++) {
@@ -342,18 +342,18 @@ public class SnowmanBoard extends VBox implements View {
 
     private void showSuccessAlert(Path filePath) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Arquivo Salvo");
-        alert.setHeaderText("Jogo salvo com sucesso!");
-        alert.setContentText("O arquivo foi salvo em:\n" + filePath.toString());
+        alert.setTitle("Saved file");
+        alert.setHeaderText("Game saved successfully!");
+        alert.setContentText("The file was saved in:\n" + filePath.toString());
         alert.showAndWait();
     }
 
     private void showErrorAlert(IOException e) {
         e.printStackTrace();
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
-        alert.setHeaderText("Erro ao salvar o arquivo");
-        alert.setContentText("Não foi possível salvar o arquivo do jogo: " + e.getMessage());
+        alert.setTitle("Error");
+        alert.setHeaderText("Error saving the file");
+        alert.setContentText("Unable to save the game file: " + e.getMessage());
         alert.showAndWait();
     }
     public void saveScore() {
@@ -443,7 +443,7 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     private void appendHeader(StringBuilder content) {
-        content.append(String.format("%-3s | %-4s | %-19s%n", "USR", "SCOR", "DATE"));
+        content.append(String.format("%-3s | %-4s | %-19s%n", "USER", "SCORE", "DATE"));
         content.append("--------------------------------\n");
     }
 
