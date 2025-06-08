@@ -151,5 +151,61 @@ public class BoardModelTest {
 
 
     }
+    @Test
+    @DisplayName("Test create big snowball")
+    void testCreateBigSnowball() {
+        Snowball snowball = board.snowballInPosition(1, 0);
+        snowball.setType(SnowballType.MID);
+        assertEquals(SnowballType.MID, snowball.getType());
 
+        snowball.move(Direction.UP, board);
+
+        assertEquals(0, snowball.getRow());
+        assertEquals(0, snowball.getCol());
+        assertEquals(SnowballType.BIG, snowball.getType());
+    }
+
+    @Test
+    @DisplayName("Test maintain big snowball size")
+    void testMaintainBigSnowball() {
+        Snowball snowball = board.snowballInPosition(1, 0);
+        snowball.setType(SnowballType.BIG);
+        assertEquals(SnowballType.BIG, snowball.getType());
+
+        snowball.move(Direction.UP, board);
+
+        assertEquals(0, snowball.getRow());
+        assertEquals(0, snowball.getCol());
+        assertEquals(SnowballType.BIG, snowball.getType());
+    }
+
+    @Test
+    @DisplayName("Test create incomplete snowman as final state")
+    void testAverageBigSnowman() {
+        Snowball midSnowball = new Snowball(1, 0, SnowballType.MID);
+        Snowball bigSnowball = new Snowball(0, 0, SnowballType.BIG);
+        board.getSnowballs().clear();
+        board.getSnowballs().add(midSnowball);
+        board.getSnowballs().add(bigSnowball);
+
+        midSnowball.move(Direction.UP, board);
+
+        assertEquals(PositionContent.SNOWMAN, board.getPositionContent(0, 0)); // Direto ao estado 'SNOWMAN'
+    }
+
+    @Test
+    @DisplayName("Test complete snowman creation")
+    void testCompleteSnowman() {
+        Snowball smallSnowball = new Snowball(2, 0, SnowballType.SMALL);
+        Snowball midSnowball = new Snowball(1, 0, SnowballType.MID);
+        Snowball bigSnowball = new Snowball(0, 0, SnowballType.BIG);
+        board.getSnowballs().clear();
+        board.getSnowballs().add(smallSnowball);
+        board.getSnowballs().add(midSnowball);
+        board.getSnowballs().add(bigSnowball);
+
+        smallSnowball.move(Direction.UP, board);
+
+        assertEquals(PositionContent.SNOWMAN, board.getPositionContent(0, 0));
+    }
 }

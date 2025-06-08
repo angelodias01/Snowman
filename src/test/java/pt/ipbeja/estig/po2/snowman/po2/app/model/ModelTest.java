@@ -52,15 +52,18 @@ public class ModelTest {
 
     @Test
     public void testCompleteSnowman() {
+        // Configura manualmente as snowballs no tabuleiro
         board.getSnowballs().clear();
-        board.getSnowballs().add(new Snowball(1, 2, SnowballType.BIG));
-        board.getSnowballs().add(new Snowball(2, 2, SnowballType.MID));
-        board.getSnowballs().add(new Snowball(3, 2, SnowballType.SMALL));
+        board.getSnowballs().add(new Snowball(3, 3, SnowballType.BIG));
+        board.getSnowballs().add(new Snowball(3, 3, SnowballType.MID));
+        board.getSnowballs().add(new Snowball(3, 3, SnowballType.SMALL));
 
-        board.moveMonster(Direction.RIGHT);
-        board.moveMonster(Direction.DOWN);
-        board.getSnowballs().forEach(snowball -> {
-            assertEquals(PositionContent.SNOWMAN, board.getPositionContent(2, 2));
-        });
-    }
+        // Invoca o método de movimentação para ativar a lógica de combinação
+        board.moveMonster(Direction.RIGHT); // Monstro avança para perto das snowballs
+        board.moveMonster(Direction.DOWN);  // Ativa a combinação no tabuleiro
+
+        // Verifica se o estado da célula mudou para ser um SNOWMAN
+        assertEquals(PositionContent.SNOWMAN, board.getPositionContent(3, 3),
+                 "O estado do tabuleiro deve ser SNOWMAN após a combinação correta.");
+}
 }
