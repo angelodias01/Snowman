@@ -55,23 +55,31 @@ public class BoardModelTest {
     @Test
     @DisplayName("Move the monster up")
     void testMonsterToUp(){
+        monster = new Monster(2,0); // Mantido posição inicial
+        board = new BoardModel(content, monster, snowballs);
+
         board.moveMonster(Direction.UP);
 
-        assertEquals(0, monster.getRow());
-        assertEquals(1, monster.getCol());
+        assertEquals(1, monster.getRow());
+        assertEquals(0, monster.getCol());
     }
 
     @Test
     @DisplayName("Test invalid monster move")
     void testMonsterInvalidMove(){
-        board.moveMonster(Direction.UP);
-
-        assertEquals(0, monster.getRow());
-        assertEquals(1, monster.getCol());
-
-        boolean validMove = board.moveMonster(Direction.UP);
-
-        assertFalse(validMove);
+        monster = new Monster(2,0);
+        board = new BoardModel(content, monster, snowballs);
+        
+        board.moveMonster(Direction.UP); // Primeiro movimento válido
+        
+        assertEquals(1, monster.getRow());
+        assertEquals(0, monster.getCol());
+        
+        boolean validMove = board.moveMonster(Direction.UP); // Segundo movimento deve ser inválido
+        
+        assertFalse(validMove); // Deve retornar falso pois não pode mover
+        assertEquals(1, monster.getRow()); // Posição deve permanecer a mesma
+        assertEquals(0, monster.getCol());
     }
 
 /*    @Test
@@ -85,32 +93,39 @@ public class BoardModelTest {
         }
     }*/
 
-    @Test
-    @DisplayName("Move snowball to the left")
-    void testMoveSnowballToTheLeft(){
-        Snowball snowball = board.snowballInPosition(0, 1);
-        board.moveMonster(Direction.LEFT);
+@Test
+@DisplayName("Move snowball to the left")
+void testMoveSnowballToTheLeft(){
+    monster = new Monster(1,1);
+    Snowball snowball = new Snowball(1,1, SnowballType.SMALL);
+    snowballs.clear();
+    snowballs.add(snowball);
+    board = new BoardModel(content, monster, snowballs);
+    
+    board.moveMonster(Direction.LEFT);
+    
+    assertEquals(1, snowball.getRow());
+    assertEquals(0, snowball.getCol());
+    assertEquals(1, monster.getRow());
+    assertEquals(0, monster.getCol());
+}
 
-        assertEquals(0, snowball.getRow());
-        assertEquals(0, snowball.getCol());
-
-        assertEquals(0, monster.getRow());
-        assertEquals(1, monster.getCol());
-
-    }
-
-    @Test
-    @DisplayName("Move the snowball up")
-    void testMoveSnowballToUp(){
-        Snowball snowball = board.snowballInPosition(1, 0);
-        board.moveMonster(Direction.UP);
-
-        assertEquals(0, snowball.getRow());
-        assertEquals(0, snowball.getCol());
-
-        assertEquals(1, monster.getRow());
-        assertEquals(0, monster.getCol());
-    }
+@Test
+@DisplayName("Move the snowball up")
+void testMoveSnowballToUp(){
+    monster = new Monster(2,0);
+    Snowball snowball = new Snowball(1,0, SnowballType.SMALL);
+    snowballs.clear();
+    snowballs.add(snowball);
+    board = new BoardModel(content, monster, snowballs);
+    
+    board.moveMonster(Direction.UP);
+    
+    assertEquals(0, snowball.getRow());
+    assertEquals(0, snowball.getCol());
+    assertEquals(1, monster.getRow());
+    assertEquals(0, monster.getCol());
+}
 
     @Test
     @DisplayName("Create average snowball")
@@ -167,7 +182,7 @@ public class BoardModelTest {
 
     @Test
     @DisplayName("Test maintain big snowball size")
-    void testMaintainBigSnowball() {
+    void testMaintainBigSnowBall() {
         Snowball snowball = board.snowballInPosition(1, 0);
         snowball.setType(SnowballType.BIG);
         assertEquals(SnowballType.BIG, snowball.getType());
