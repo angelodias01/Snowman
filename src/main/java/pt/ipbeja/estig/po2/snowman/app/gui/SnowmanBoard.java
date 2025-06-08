@@ -24,6 +24,7 @@ import java.util.Optional;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import java.util.function.Consumer;
+import java.time.LocalTime;
 
 /**
  * The SnowmanBoard class is the main GUI component responsible for displaying the game board,
@@ -207,10 +208,16 @@ public class SnowmanBoard extends VBox implements View {
         }
 
         if (direction != null) {
+            int fromRow = boardModel.getMonster().getRow();
+            int fromCol = boardModel.getMonster().getCol();
+            
             boolean moved = boardModel.moveMonster(direction);
             if (moved) {
+                int toRow = boardModel.getMonster().getRow();
+                int toCol = boardModel.getMonster().getCol();
+                
                 this.score += 1;
-                movementsLog.appendText("Monster moved to " + direction + " (Score: " + score + ")\n");
+                logMovement(fromRow, fromCol, toRow, toCol);
                 updateBoard();
             }
         }
@@ -587,5 +594,24 @@ public class SnowmanBoard extends VBox implements View {
 
         Files.write(filePath, scoreEntry.getBytes(),
                 StandardOpenOption.APPEND);
+    }
+
+    /**
+     * Logs player movements in (row, col) format where col is a letter
+     */
+    private void logMovement(int fromRow, int fromCol, int toRow, int toCol) {
+        String timestamp = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String fromPos = formatPosition(fromRow, fromCol);
+        String toPos = formatPosition(toRow, toCol);
+        movementsLog.appendText(String.format("[%s] %s -> %s%n", timestamp, fromPos, toPos));
+    }
+
+    /**
+     * Formats position as (row, col) where col is a letter
+     */
+    private String formatPosition(int row, int col) {
+        char colLetter = (char) ('A' + col);
+        // Row + 1 porque arrays começam em 0, mas queremos mostrar começando em 1
+        return String.format("(%d, %c)", row + 1, colLetter);
     }
 }
