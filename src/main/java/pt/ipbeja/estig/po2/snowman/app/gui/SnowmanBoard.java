@@ -12,7 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -22,8 +22,10 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+
 import java.util.function.Consumer;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class SnowmanBoard extends VBox implements View {
     private final Image snowmanImage = new Image(getClass().getResourceAsStream("/images/snowman.png"));
     private final Image monsterImage = new Image(getClass().getResourceAsStream("/images/monster.png"));
 
-    public SnowmanBoard(BoardModel boardModel, Consumer<Void> onLevelComplete,String playerName) {
+    public SnowmanBoard(BoardModel boardModel, Consumer<Void> onLevelComplete, String playerName) {
         this.boardModel = boardModel;
         this.onLevelComplete = onLevelComplete;
         this.board = new GridPane();
@@ -193,7 +195,7 @@ public class SnowmanBoard extends VBox implements View {
         // Adicionar letras para as colunas
         for (int col = 0; col <= boardModel.getCols(); col++) {
             if (col > 0) {
-                Label colLabel = new Label(String.valueOf((char)('A' + col - 1)));
+                Label colLabel = new Label(String.valueOf((char) ('A' + col - 1)));
                 board.add(colLabel, col, 0);
             }
         }
@@ -226,19 +228,25 @@ public class SnowmanBoard extends VBox implements View {
 
         // Verificar monstro primeiro
         if (boardModel.getMonster().getRow() == row &&
-            boardModel.getMonster().getCol() == col) {
+                boardModel.getMonster().getCol() == col) {
             imageView.setImage(monsterImage);
         } else {
             // Verificar bolas de neve
             Snowball snowball = boardModel.snowballInPosition(row, col);
             if (snowball != null) {
                 switch (snowball.getType()) {
-                    case SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_small.png")));
-                    case MID -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_mid.png")));
-                    case BIG -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_big.png")));
-                    case MID_SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial1.png")));
-                    case BIG_SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial2.png")));
-                    case BIG_MID -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial3.png")));
+                    case SMALL ->
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_small.png")));
+                    case MID ->
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_mid.png")));
+                    case BIG ->
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_big.png")));
+                    case MID_SMALL ->
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial1.png")));
+                    case BIG_SMALL ->
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial2.png")));
+                    case BIG_MID ->
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial3.png")));
                     case COMPLETE -> imageView.setImage(snowmanImage);
                 }
             } else {
@@ -260,7 +268,7 @@ public class SnowmanBoard extends VBox implements View {
     private void handleCellClick(int row, int col) {
         // Registrar movimento no log
         String move = String.format("(%d, %c) -> (%d, %c)",
-            row + 1, (char)('A' + col), row + 1, (char)('A' + col));
+                row + 1, (char) ('A' + col), row + 1, (char) ('A' + col));
         movementsLog.appendText(move + "\n");
 
         // A verificação de fim de jogo já é feita no updateBoard()
@@ -385,6 +393,7 @@ public class SnowmanBoard extends VBox implements View {
         alert.setContentText("Unable to save the game file: " + e.getMessage());
         alert.showAndWait();
     }
+
     public void saveScore() {
         try {
             Path leaderboardPath = createLeaderboardFile();

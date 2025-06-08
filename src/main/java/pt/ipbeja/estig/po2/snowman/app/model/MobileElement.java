@@ -2,23 +2,26 @@ package pt.ipbeja.estig.po2.snowman.app.model;
 
 /**
  * The abstract class MobileElement represents any movable element on the game board.
- *
+ * <p>
  * Mobile elements have position coordinates (row and column) on the board
  * and methods to retrieve or update their position. The class also defines
  * an abstract movement method that must be implemented by specific subclasses.
- *
+ * <p>
  * Typical subclasses include:
  * - Monster: the monster controlled by the player.
  * - Snowball: the snowball that can be pushed or combined in the game.
- * 
- * @version 1.0
- * @since 2025-06-08
+ *
+ * @author Ângelo Dias, Edgar Brito
  */
 public abstract class MobileElement {
-    /** Current row on the board where the element is located. */
+    /**
+     * Current row on the board where the element is located.
+     */
     protected int row;
 
-    /** Current column on the board where the element is located. */
+    /**
+     * Current column on the board where the element is located.
+     */
     protected int col;
 
     /**
@@ -70,13 +73,13 @@ public abstract class MobileElement {
 
     /**
      * Defines the abstract movement behavior of the element.
-     *
+     * <p>
      * Subclasses must implement this method to provide specific movement logic,
      * such as checking whether the move is valid or interacting with other
      * elements on the board.
      *
      * @param direction The direction of the movement (UP, DOWN, LEFT, RIGHT).
-     * @param board The game board model containing the current game logic and state.
+     * @param board     The game board model containing the current game logic and state.
      * @return true if the movement was successful; otherwise, false.
      */
     public abstract boolean move(Direction direction, BoardModel board);

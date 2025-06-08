@@ -8,39 +8,39 @@ import java.io.InputStream;
 /**
  * The GameAudio class is responsible for managing and playing background audio in the Snowman game.
  * It leverages the Java Sound API to handle audio playback, including looping and resource management.
- *
+ * <p>
  * Key Responsibilities:
  * - Playing audio files stored in the application resources
  * - Managing audio playback (start, stop, and looping)
  * - Handling audio resources efficiently
- *
+ * <p>
  * Limitations:
  * - Supports only audio files in the WAV format
  * - Cannot play multiple audio tracks simultaneously
  * - No volume control functionality
- *
+ * <p>
  * Usage Example:
  * <pre>
  *     GameAudio audioPlayer = new GameAudio();
  *     audioPlayer.play("background.wav"); // Starts looping playback of the specified audio
  *     audioPlayer.stop(); // Stops playback and releases resources
  * </pre>
- *
+ * <p>
  * Threading Note:
  * This class is not designed for concurrent use. Ensure that method invocations occur on the same thread.
  *
- * @author Snowman Game Development Team
- * @version 1.0
- * @since 2025-06-08
+ * @author Ângelo Dias, Edgar Brito
  */
 public class GameAudio {
 
-    /** Active audio clip used for playback */
+    /**
+     * Active audio clip used for playback
+     */
     private Clip clip;
 
     /**
      * Plays the specified audio file from the resources folder.
-     *
+     * <p>
      * This method attempts to locate and play a WAV file from the `/audio/` directory in the
      * project's resources. Any audio already playing will be stopped and the new audio
      * will play in a continuous loop.
@@ -78,7 +78,7 @@ public class GameAudio {
 
     /**
      * Stops the currently playing audio and releases associated resources.
-     *
+     * <p>
      * This method ensures that any currently active audio playback is terminated
      * and system resources associated with the audio clip are properly released.
      */
@@ -94,11 +94,11 @@ public class GameAudio {
      * Implementation Notes:
      * - Utilizes Java's `javax.sound.sampled` API for cross-platform audio support.
      * - Audio streaming is buffered to improve performance and reliability.
-     * 
+     *
      * Known Limitations:
      * - Does not support advanced audio features (e.g., volume control, fade in/out effects).
      * - File validation relies on file presence and correct format (WAV).
-     * 
+     *
      * Future Improvements:
      * - Add support for multiple concurrent audio tracks (e.g., independent sound effects).
      * - Implement volume control for finer audio management.

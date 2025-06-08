@@ -2,7 +2,6 @@ package pt.ipbeja.estig.po2.snowman.app.gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
@@ -12,8 +11,6 @@ import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
-import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static javafx.scene.control.PopupControl.USE_COMPUTED_SIZE;
 
 public class SnowmanGUI extends Application {
     private BoardModel boardModel;
@@ -50,7 +46,7 @@ public class SnowmanGUI extends Application {
         createLeaderboardPanel();
 
         // Criar e inicializar o SnowmanBoard com o handler de conclusão de nível
-        this.snowmanBoard = new SnowmanBoard(boardModel, this::handleLevelComplete,playerName);
+        this.snowmanBoard = new SnowmanBoard(boardModel, this::handleLevelComplete, playerName);
 
         // Criar o layout raiz
         BorderPane root = new BorderPane();

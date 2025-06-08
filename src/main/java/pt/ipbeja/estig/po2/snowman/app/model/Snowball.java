@@ -2,22 +2,23 @@ package pt.ipbeja.estig.po2.snowman.app.model;
 
 /**
  * The Snowball class represents a movable snowball on the game board.
- *
+ * <p>
  * This class extends the MobileElement abstract class and incorporates additional features
  * specific to snowballs, such as their type (size) and the ability to grow or combine
  * with other snowballs.
- *
+ * <p>
  * Key Responsibilities:
  * - Represent a snowball in terms of size, position, and movement on the board.
  * - Define behaviors for growing in size and combining with other snowballs.
  * - Implement movement logic specific to snowballs, including interactions
- *   with the board and other elements.
+ * with the board and other elements.
  *
- * @version 1.0
- * @since 2025-06-08
+ * @author Ângelo Dias, Edgar Brito
  */
 public class Snowball extends MobileElement {
-    /** The type/size of the snowball (e.g., SMALL, MID, BIG). */
+    /**
+     * The type/size of the snowball (e.g., SMALL, MID, BIG).
+     */
     private SnowballType type;
 
     /**
@@ -52,8 +53,8 @@ public class Snowball extends MobileElement {
 
     /**
      * Increases the size of the snowball when it collects snow from the ground.
-     *
-     * The snowball grows from SMALL to MID, and from MID to BIG. If it is already 
+     * <p>
+     * The snowball grows from SMALL to MID, and from MID to BIG. If it is already
      * BIG, no further growth occurs.
      */
     public void increaseSnowballType() {
@@ -65,7 +66,7 @@ public class Snowball extends MobileElement {
 
     /**
      * Implements the movement behavior of the snowball.
-     *
+     * <p>
      * The method calculates the next position based on the given direction and checks:
      * 1. If the position is valid and within the board's bounds.
      * 2. If another snowball is present, attempts to combine them.
@@ -107,10 +108,10 @@ public class Snowball extends MobileElement {
 
     /**
      * Attempts to combine the current snowball with another snowball.
-     *
+     * <p>
      * If the two snowballs can combine, they are removed from the board
      * and replaced by a combined snowball or a complete snowman,
-     * depending on their types. 
+     * depending on their types.
      *
      * @param other The other snowball to combine with.
      * @param board The game board.
@@ -138,7 +139,7 @@ public class Snowball extends MobileElement {
 
     /**
      * Calculates the resulting type of two combined snowballs.
-     *
+     * <p>
      * This method determines whether two snowballs of the specified types
      * can combine into a larger snowball or a complete snowman.
      *
@@ -148,15 +149,15 @@ public class Snowball extends MobileElement {
      */
     private SnowballType calculateCombinedType(SnowballType type1, SnowballType type2) {
         if ((type1 == SnowballType.SMALL && type2 == SnowballType.MID) ||
-            (type2 == SnowballType.SMALL && type1 == SnowballType.MID)) {
+                (type2 == SnowballType.SMALL && type1 == SnowballType.MID)) {
             return SnowballType.MID_SMALL;
         }
         if ((type1 == SnowballType.SMALL && type2 == SnowballType.BIG) ||
-            (type2 == SnowballType.SMALL && type1 == SnowballType.BIG)) {
+                (type2 == SnowballType.SMALL && type1 == SnowballType.BIG)) {
             return SnowballType.BIG_SMALL;
         }
         if ((type1 == SnowballType.MID && type2 == SnowballType.BIG) ||
-            (type2 == SnowballType.MID && type1 == SnowballType.BIG)) {
+                (type2 == SnowballType.MID && type1 == SnowballType.BIG)) {
             return SnowballType.BIG_MID;
         }
 
@@ -177,10 +178,10 @@ public class Snowball extends MobileElement {
      */
     private boolean hasAllThreeParts(SnowballType type1, SnowballType type2) {
         return (type1 == SnowballType.BIG_MID && type2 == SnowballType.SMALL) ||
-               (type2 == SnowballType.BIG_MID && type1 == SnowballType.SMALL) ||
-               (type1 == SnowballType.BIG_SMALL && type2 == SnowballType.MID) ||
-               (type2 == SnowballType.BIG_SMALL && type1 == SnowballType.MID) ||
-               (type1 == SnowballType.MID_SMALL && type2 == SnowballType.BIG) ||
-               (type2 == SnowballType.MID_SMALL && type1 == SnowballType.BIG);
+                (type2 == SnowballType.BIG_MID && type1 == SnowballType.SMALL) ||
+                (type1 == SnowballType.BIG_SMALL && type2 == SnowballType.MID) ||
+                (type2 == SnowballType.BIG_SMALL && type1 == SnowballType.MID) ||
+                (type1 == SnowballType.MID_SMALL && type2 == SnowballType.BIG) ||
+                (type2 == SnowballType.MID_SMALL && type1 == SnowballType.BIG);
     }
 }

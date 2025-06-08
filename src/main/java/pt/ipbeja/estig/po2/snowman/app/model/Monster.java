@@ -2,17 +2,16 @@ package pt.ipbeja.estig.po2.snowman.app.model;
 
 /**
  * The Monster class represents the movable element controlled by the player in the game.
- *
+ * <p>
  * This class extends the abstract class MobileElement and implements the
  * specific movement logic for the monster, including interactions with snowballs
  * and the game board.
- *
+ * <p>
  * Key Responsibilities:
  * - Represent the monster controlled by the player in terms of position and movement.
  * - Implement movement functionality based on board constraints and snowball interactions.
  *
- * @version 1.0
- * @since 2025-06-08
+ * @author Ângelo Dias, Edgar Brito
  */
 public class Monster extends MobileElement {
 
@@ -28,14 +27,14 @@ public class Monster extends MobileElement {
 
     /**
      * Moves the monster in the specified direction if possible.
-     *
+     * <p>
      * This method first calculates the new position based on the direction.
      * It checks if the move is valid by ensuring the destination is within bounds
      * and not blocked. If a snowball is present at the destination, the method
      * attempts to move the snowball before proceeding with the monster's movement.
      *
      * @param direction The direction of movement (UP, DOWN, LEFT, RIGHT).
-     * @param board The game board model containing the current game state and logic.
+     * @param board     The game board model containing the current game state and logic.
      * @return true if the movement was successful; false otherwise.
      */
     @Override
@@ -81,13 +80,13 @@ public class Monster extends MobileElement {
 
     /**
      * Checks if the monster can move to a specific position on the board.
-     *
+     * <p>
      * This method validates if the target position is within bounds and checks
      * whether any snowballs in the intended path can also be moved.
      *
      * @param newRow The new row position to check.
      * @param newCol The new column position to check.
-     * @param board The game board model.
+     * @param board  The game board model.
      * @return true if the move is valid; false otherwise.
      */
     private boolean canMoveTo(int newRow, int newCol, BoardModel board) {
