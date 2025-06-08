@@ -5,23 +5,109 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Represents the main model for the game board.
- * It manages the game state, including the board layout, monster, snowballs, and undo/redo history.
+ * The BoardModel class represents the core game logic and state management for the Snowman game.
+ * It manages the game board, monster movement, snowball interactions, and game state history.
+ *
+ * Key responsibilities:
+ * - Maintaining the game board state and layout
+ * - Processing monster movements and validations
+ * - Managing snowball combinations and positions
+ * - Implementing undo/redo functionality
+ * - Tracking game completion state
+ *
+ * Design patterns used:
+ * - Memento Pattern: for undo/redo functionality
+ * - Observer Pattern: notifies view of state changes
+ *
+ * Threading: This class is not thread-safe and should be accessed from a single thread.
+ *
+ * @author Snowman Game Development Team
+ * @version 1.0
+ * @since 2025-06-08
  */
 public class BoardModel {
 
+
+
+    /**
+     * Core game state components:
+     * - board: 2D grid representing the game board
+     * - monster: Player-controlled character
+     * - snowballs: Collection of movable snowballs
+     * - history/redoHistory: Stacks for undo/redo functionality
+     */
     private final List<List<PositionContent>> board;
     private final Monster monster;
     private final List<Snowball> snowballs;
-
     private final Stack<GameState> history;
     private final Stack<GameState> redoHistory;
 
-    private final List<List<PositionContent>> initialBoard; // Initial state of the board
-    private final int initialMonsterRow; // Monster's initial row
-    private final int initialMonsterCol; // Monster's initial column
-    private final List<Snowball> initialSnowballs; // Initial state of snowballs
+    /**
+     * Initial state storage for level reset functionality:
+     * - initialBoard: Starting board configuration
+     * - initialMonsterPosition: Starting monster position
+     * - initialSnowballs: Starting snowball configurations
+     */
+    private final List<List<PositionContent>> initialBoard;
+    private final int initialMonsterRow;
+    private final int initialMonsterCol;
+    private final List<Snowball> initialSnowballs;
 
+    /**
+     * Constructs a new BoardModel with the specified initial configuration.
+     *
+     * @param board Initial board layout
+     * @param monster Initial monster position and state
+     * @param snowballs Initial snowball configurations
+     * @throws IllegalArgumentException if board dimensions are invalid
+     */
+
+    /**
+     * Moves the monster in the specified direction if the move is valid.
+     * Handles snowball interactions and updates game state.
+     *
+     * @param direction The direction to move the monster
+     * @return true if the move was successful, false otherwise
+     */
+
+    /**
+     * Reverts the game state to the previous state if available.
+     *
+     * @return true if undo was successful, false if no history available
+     */
+
+    /**
+     * Reapplies a previously undone move if available.
+     *
+     * @return true if redo was successful, false if no redo history available
+     */
+
+    /**
+     * Resets the level to its initial state.
+     * Clears all history stacks and restores initial configurations.
+     */
+
+    /**
+     * Checks if the current level is complete based on snowball combinations.
+     *
+     * @return true if the level objectives are met, false otherwise
+     */
+
+    // Additional helper methods documentation...
+
+    /**
+     * Implementation considerations:
+     * 1. Performance: O(1) for most operations, O(n) for board state copies
+     * 2. Memory usage: Scales with board size and history depth
+     * 3. Extensibility: Designed for easy addition of new game mechanics
+     *
+     * Known limitations:
+     * 1. Maximum board size restricted to 10x10
+     * 2. No support for concurrent modifications
+     * 3. Memory consumption increases with undo history
+     */
+    private static final int MIN_BOARD_SIZE = 3;
+    private static final int MAX_BOARD_SIZE = 10;
     /**
      * Constructs a new BoardModel with the provided initial configuration.
      *

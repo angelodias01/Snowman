@@ -1,34 +1,64 @@
 package pt.ipbeja.estig.po2.snowman.app.model;
 
-
 /**
- * Enum that represents the four cardinal directions a character or object can move on a 2D grid.
- * Each direction is associated with a change in row and column indexes.
+ * Direction enum represents cardinal directions for movement in a 2D grid-based game system.
+ * 
+ * This enumeration provides a type-safe way to represent and handle directional movement
+ * by associating each direction with its corresponding grid coordinate changes.
+ * It encapsulates the logic for translating cardinal directions into coordinate modifications.
+ *
+ * Features:
+ * - Four cardinal directions (UP, DOWN, LEFT, RIGHT)
+ * - Coordinate delta values for each direction
+ * - Immutable design
+ * - Grid-based movement support
+ *
+ * Usage example:
+ * <pre>
+ *     Direction dir = Direction.UP;
+ *     int newRow = currentRow + dir.getDeltaRow();
+ *     int newCol = currentCol + dir.getDeltaCol();
+ * </pre>
+ *
+ * @since 1.0
+ * @version 1.0
  */
 public enum Direction {
-    // Move one row up (decrement row index)
+    /**
+     * Represents upward movement (negative row delta)
+     * Delta: (-1, 0)
+     */
     UP(-1, 0),
 
-    // Move one row down (increment row index)
+    /**
+     * Represents downward movement (positive row delta)
+     * Delta: (1, 0)
+     */
     DOWN(1, 0),
 
-    // Move one column to the left (decrement column index)
+    /**
+     * Represents leftward movement (negative column delta)
+     * Delta: (0, -1)
+     */
     LEFT(0, -1),
 
-    // Move one column to the right (increment column index)
+    /**
+     * Represents rightward movement (positive column delta)
+     * Delta: (0, 1)
+     */
     RIGHT(0, 1);
 
-    // Change in row index for the given direction
+    /** The change in row index when moving in this direction */
     private final int deltaRow;
 
-    // Change in column index for the given direction
+    /** The change in column index when moving in this direction */
     private final int deltaCol;
 
     /**
-     * Constructs a Direction enum with specified row and column deltas.
-     *
-     * @param deltaRow The change in row when moving in this direction.
-     * @param deltaCol The change in column when moving in this direction.
+     * Constructs a Direction with specified coordinate deltas.
+     * 
+     * @param deltaRow The change in row coordinate (-1 for up, 1 for down, 0 for no change)
+     * @param deltaCol The change in column coordinate (-1 for left, 1 for right, 0 for no change)
      */
     Direction(int deltaRow, int deltaCol) {
         this.deltaRow = deltaRow;
@@ -36,20 +66,39 @@ public enum Direction {
     }
 
     /**
-     * Gets the row delta associated with the direction.
-     *
-     * @return The change in row index.
+     * Returns the row delta value for this direction.
+     * 
+     * @return An integer representing the change in row index:
+     *         -1 for upward movement
+     *         1 for downward movement
+     *         0 for horizontal movement
      */
     public int getDeltaRow() {
         return deltaRow;
     }
 
     /**
-     * Gets the column delta associated with the direction.
-     *
-     * @return The change in column index.
+     * Returns the column delta value for this direction.
+     * 
+     * @return An integer representing the change in column index:
+     *         -1 for leftward movement
+     *         1 for rightward movement
+     *         0 for vertical movement
      */
     public int getDeltaCol() {
         return deltaCol;
     }
+
+    /**
+     * Technical Notes:
+     * - Thread-safe due to enum implementation
+     * - Immutable design prevents state-related bugs
+     * - Memory efficient with only four instances
+     * - Coordinate system assumes top-left origin (0,0)
+     * - Positive Y-axis points downward (standard computer graphics convention)
+     * 
+     * Limitations:
+     * - Only supports cardinal directions (no diagonals)
+     * - Fixed step size of 1 unit
+     */
 }
