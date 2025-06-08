@@ -2,17 +2,27 @@ package pt.ipbeja.estig.po2.snowman.app.gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static javafx.scene.control.PopupControl.USE_COMPUTED_SIZE;
 
 public class SnowmanGUI extends Application {
     private BoardModel boardModel;
@@ -20,6 +30,9 @@ public class SnowmanGUI extends Application {
     private LevelManager levelManager;
     private GameAudio audioPlayer;
     private String playerName;
+    private VBox leaderboardPanel;  // Add this field
+    private ListView<String> leaderboardListView;
+    private static final double PADDING_VALUE = 10.0;
 
     @Override
     public void start(Stage stage) {
@@ -33,13 +46,16 @@ public class SnowmanGUI extends Application {
         this.audioPlayer = new GameAudio();
         this.levelManager = new LevelManager();
         this.boardModel = createInitialBoard();
-        
+
+        createLeaderboardPanel();
+
         // Criar e inicializar o SnowmanBoard com o handler de conclusão de nível
-        this.snowmanBoard = new SnowmanBoard(boardModel, this::handleLevelComplete);
+        this.snowmanBoard = new SnowmanBoard(boardModel, this::handleLevelComplete,playerName);
 
         // Criar o layout raiz
         BorderPane root = new BorderPane();
         root.setCenter(snowmanBoard);
+        root.setRight(leaderboardPanel);
 
         // Configurar a cena e o palco
         Scene scene = new Scene(root, 600, 400);
@@ -50,6 +66,9 @@ public class SnowmanGUI extends Application {
 
         // Requisitar foco para o tabuleiro
         snowmanBoard.requestFocus();
+
+        updateLeaderboard();
+
         stage.show();
     }
 
@@ -83,9 +102,6 @@ public class SnowmanGUI extends Application {
      * Handler chamado quando um nível é completado
      */
     private void handleLevelComplete(Void unused) {
-        // Salvar o jogo primeiro
-        snowmanBoard.saveGameToFile();
-        
         if (levelManager.hasNextLevel()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Nível Completo");
@@ -94,14 +110,16 @@ public class SnowmanGUI extends Application {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Carregar próximo nível
                 this.boardModel = levelManager.loadNextLevel();
                 snowmanBoard.loadNewLevel(boardModel);
-                // Atualizar título da janela
                 Stage stage = (Stage) snowmanBoard.getScene().getWindow();
                 stage.setTitle("Jogo do Boneco de Neve - Nível " + (levelManager.getCurrentLevelIndex() + 1));
             }
         } else {
+            // Salvar pontuação apenas quando o jogo terminar
+            snowmanBoard.saveScore();
+            updateLeaderboard();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Jogo Completo");
             alert.setHeaderText("Parabéns!");
@@ -129,6 +147,49 @@ public class SnowmanGUI extends Application {
             return true;
         }
         return false;
+    }
+
+    private void createLeaderboardPanel() {
+        leaderboardPanel = new VBox(10);  // usando valor direto ao invés de PADDING_VALUE
+        leaderboardPanel.setPadding(new javafx.geometry.Insets(10, 10, 10, 10));
+
+        javafx.scene.control.Label titleLabel = new javafx.scene.control.Label("LEADERBOARD");
+        titleLabel.setFont(new javafx.scene.text.Font(16));
+        titleLabel.setAlignment(javafx.geometry.Pos.CENTER);
+
+        leaderboardListView = new ListView<>();
+        leaderboardListView.setPrefHeight(300);
+
+        javafx.scene.control.Button refreshButton = new javafx.scene.control.Button("Refresh");
+        refreshButton.setOnAction(e -> updateLeaderboard());
+
+        leaderboardPanel.getChildren().addAll(titleLabel, leaderboardListView, refreshButton);
+    }
+
+    private void updateLeaderboard() {
+        try {
+            Path leaderboardPath = Paths.get(System.getProperty("user.home"), "Documents", "Snowman", "leaderboard.txt");
+            if (!Files.exists(leaderboardPath)) {
+                leaderboardListView.getItems().clear();
+                leaderboardListView.getItems().add("No scores yet");
+                return;
+            }
+
+            List<String> scores = Files.readAllLines(leaderboardPath);
+            leaderboardListView.getItems().clear();
+
+            // Add header
+            leaderboardListView.getItems().add(String.format("%-3s | %-4s | %-10s", "USR", "SCOR", "DATE"));
+            leaderboardListView.getItems().add("--------------------------");
+
+            // Add scores
+            scores.forEach(score -> leaderboardListView.getItems().add(score));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            leaderboardListView.getItems().clear();
+            leaderboardListView.getItems().add("Error loading scores");
+        }
     }
 
 

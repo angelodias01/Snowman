@@ -18,12 +18,14 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import java.util.function.Consumer;
+import java.util.List;
 
 public class SnowmanBoard extends VBox implements View {
     private final Consumer<Void> onLevelComplete;
@@ -33,6 +35,10 @@ public class SnowmanBoard extends VBox implements View {
     private BoardModel boardModel;
     private final GridPane board;
     private final TextArea movementsLog;
+    private String playerName;
+    private int score;
+    private static final String LEADERBOARD_FILE = "leaderboard.txt";
+    private int totalGameScore = 0;
 
     // Imagens para os elementos do jogo
     private final Image snowImage = new Image(getClass().getResourceAsStream("/images/snow.png"));
@@ -40,13 +46,15 @@ public class SnowmanBoard extends VBox implements View {
     private final Image snowmanImage = new Image(getClass().getResourceAsStream("/images/snowman.png"));
     private final Image monsterImage = new Image(getClass().getResourceAsStream("/images/monster.png"));
 
-    public SnowmanBoard(BoardModel boardModel, Consumer<Void> onLevelComplete) {
+    public SnowmanBoard(BoardModel boardModel, Consumer<Void> onLevelComplete,String playerName) {
         this.boardModel = boardModel;
         this.onLevelComplete = onLevelComplete;
         this.board = new GridPane();
         this.movementsLog = new TextArea();
         this.movementsLog.setEditable(false);
         this.movementsLog.setPrefRowCount(3);
+        this.playerName = playerName;
+        this.score = 0;
 
         this.resetButton = new Button("Reiniciar Nível");
         this.resetButton.setOnAction(e -> resetLevel());
@@ -88,6 +96,8 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     public void loadNewLevel(BoardModel newBoard) {
+        this.totalGameScore += this.score; // Acumular pontuação do nível anterior
+        this.score = 0; // Reiniciar pontuação do nível
         this.boardModel = newBoard;
         this.movementsLog.clear();
         updateBoard();
@@ -126,6 +136,7 @@ public class SnowmanBoard extends VBox implements View {
             return;
         }
 
+
         // Verificar primeiro se é CTRL+Z para undo
         if (event.isControlDown() && event.getCode() == KeyCode.Z) {
             if (boardModel.undo()) {
@@ -158,7 +169,8 @@ public class SnowmanBoard extends VBox implements View {
         if (direction != null) {
             boolean moved = boardModel.moveMonster(direction);
             if (moved) {
-                movementsLog.appendText("Monstro moveu para " + direction + "\n");
+                this.score += 1;  // Add 10 points for each move
+                movementsLog.appendText("Monstro moveu para " + direction + " (Score: " + score + ")\n");
                 updateBoard();
             }
         }
@@ -344,5 +356,95 @@ public class SnowmanBoard extends VBox implements View {
         alert.setContentText("Não foi possível salvar o arquivo do jogo: " + e.getMessage());
         alert.showAndWait();
     }
+    public void saveScore() {
+        try {
+            Path leaderboardPath = createLeaderboardFile();
+            appendScoreToLeaderboard(leaderboardPath);
+            showSuccessAlert(leaderboardPath);
+        } catch (IOException e) {
+            showErrorAlert(e);
+        }
+    }
 
+    private Path createLeaderboardFile() throws IOException {
+        String documentsPath = System.getProperty("user.home") + "/Documents";
+        Path snowmanPath = Paths.get(documentsPath, "Snowman");
+
+        if (!Files.exists(snowmanPath)) {
+            Files.createDirectories(snowmanPath);
+        }
+
+        return snowmanPath.resolve(LEADERBOARD_FILE);
+    }
+
+    private void appendScoreToLeaderboard(Path filePath) throws IOException {
+        if (!Files.exists(filePath)) {
+            Files.createFile(filePath);
+        }
+
+        // Calcular pontuação final (inclui nível atual)
+        int finalScore = totalGameScore + score;
+
+        // Format current date and time
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+
+        // Create the score entry
+        String scoreEntry = String.format("%-3s | %4d | %s%n",
+                playerName, finalScore, dateTime);
+
+        // Append to file
+        Files.write(filePath, scoreEntry.getBytes(),
+                StandardOpenOption.APPEND);
+    }
+
+
+    public void showLeaderboard() {
+        try {
+            Path leaderboardPath = createLeaderboardFile();
+            if (!Files.exists(leaderboardPath)) {
+                showNoLeaderboardAlert();
+                return;
+            }
+
+            List<String> scores = Files.readAllLines(leaderboardPath);
+        
+            if (scores.isEmpty()) {
+                showNoLeaderboardAlert();
+                return;
+            }
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Leaderboard");
+            alert.setHeaderText("Top Scores");
+        
+            TextArea textArea = new TextArea();
+            textArea.setEditable(false);
+            textArea.setPrefRowCount(10);
+            textArea.setPrefColumnCount(40);
+        
+            // Add header
+            StringBuilder content = new StringBuilder();
+            content.append(String.format("%-3s | %-4s | %-19s%n", "USR", "SCOR", "DATE"));
+            content.append("--------------------------------\n");
+        
+            // Add all scores
+            scores.forEach(score -> content.append(score));
+        
+            textArea.setText(content.toString());
+        
+            alert.getDialogPane().setContent(textArea);
+            alert.showAndWait();
+        
+        } catch (IOException e) {
+            showErrorAlert(e);
+        }
+    }
+
+    private void showNoLeaderboardAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Leaderboard");
+        alert.setHeaderText("No Scores Yet");
+        alert.setContentText("There are no scores recorded yet.");
+        alert.showAndWait();
+    }
 }
