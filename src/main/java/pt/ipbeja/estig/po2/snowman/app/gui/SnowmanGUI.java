@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 public class SnowmanGUI extends Application {
     private BoardModel boardModel;
     private SnowmanBoard snowmanBoard;

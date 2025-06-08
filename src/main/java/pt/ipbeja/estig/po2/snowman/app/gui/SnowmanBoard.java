@@ -12,7 +12,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -22,12 +21,9 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-
 import java.util.function.Consumer;
-import java.util.List;
 
 /**
  * The SnowmanBoard class is the main GUI component responsible for displaying the game board,
