@@ -117,6 +117,7 @@ public class SnowmanGUI extends Application {
             }
         } else {
             // Salvar pontuação apenas quando o jogo terminar
+            snowmanBoard.saveGameToFile();
             snowmanBoard.saveScore();
             updateLeaderboard();
 

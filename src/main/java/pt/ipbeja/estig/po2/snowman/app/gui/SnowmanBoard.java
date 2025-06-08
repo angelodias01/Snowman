@@ -280,40 +280,69 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     private Path createFilePath(String filename) throws IOException {
-        String documentsPath = System.getProperty("user.home") + "/Documents";
-        Path snowmanPath = Paths.get(documentsPath, "Snowman");
-
+        Path snowmanPath = getSnowmanDirectory();
         if (!Files.exists(snowmanPath)) {
             Files.createDirectories(snowmanPath);
         }
-
         return snowmanPath.resolve(filename);
     }
 
+    private Path getSnowmanDirectory() {
+        String documentsPath = System.getProperty("user.home") + "/Documents";
+        return Paths.get(documentsPath, "Snowman");
+    }
+
     private void saveGameData(Path filePath) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath.toFile()))) {
-            saveMap(writer);
-            saveMovements(writer);
-            saveMoveCount(writer);
-            saveSnowmanPosition(writer);
+        checkAndCreateParentDirectories(filePath);
+        writeGameData(filePath);
+    }
+
+    private void checkAndCreateParentDirectories(Path filePath) throws IOException {
+        Path parent = filePath.getParent();
+        if (!Files.exists(parent)) {
+            Files.createDirectories(parent);
         }
+    }
+
+    private void writeGameData(Path filePath) throws IOException {
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(filePath))) {
+            writeGameContent(writer);
+        }
+    }
+
+    private void writeGameContent(PrintWriter writer) {
+        saveMap(writer);
+        saveMovements(writer);
+        saveMoveCount(writer);
+        saveSnowmanPosition(writer);
     }
 
     private void saveMap(PrintWriter writer) {
         writer.println("=== MAP USED ===");
+        writeMapContent(writer);
+    }
 
+    private void writeMapContent(PrintWriter writer) {
         for (int i = 0; i < boardModel.getRows(); i++) {
-            for (int j = 0; j < boardModel.getCols(); j++) {
-                PositionContent content = boardModel.getPositionContent(i, j);
-                writer.print(switch (content) {
-                    case SNOW -> "S ";
-                    case NO_SNOW -> "- ";
-                    case BLOCK -> "B ";
-                    case SNOWMAN -> "M ";
-                });
-            }
+            writeMapRow(writer, i);
             writer.println();
         }
+    }
+
+    private void writeMapRow(PrintWriter writer, int row) {
+        for (int col = 0; col < boardModel.getCols(); col++) {
+            PositionContent content = boardModel.getPositionContent(row, col);
+            writer.print(getContentSymbol(content));
+        }
+    }
+
+    private String getContentSymbol(PositionContent content) {
+        return switch (content) {
+            case SNOW -> "S ";
+            case NO_SNOW -> "- ";
+            case BLOCK -> "B ";
+            case SNOWMAN -> "M ";
+        };
     }
 
     private void saveMovements(PrintWriter writer) {
