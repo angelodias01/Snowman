@@ -25,7 +25,7 @@ Snowman is a Java-based game that offers puzzle-solving gameplay where you move 
 
 Clone the repository:
 
-sh git clone <[your-repository-url](https://github.com/angelodias01/Snowman)> cd Snowman
+sh git clone https://github.com/angelodias01/Snowman cd Snowman
 
 
 Build the application:
