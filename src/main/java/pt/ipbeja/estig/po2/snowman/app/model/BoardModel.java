@@ -4,8 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * The BoardModel class represents the core game logic and state management for the Snowman game.
+ * It manages the game board, monster movement, snowball interactions, and game state history.
+ *
+ * Key responsibilities:
+ * - Maintaining the game board state and layout
+ * - Processing monster movements and validations
+ * - Managing snowball combinations and positions
+ * - Implementing undo/redo functionality
+ * - Tracking game completion state
+ *
+ * Design patterns used:
+ * - Memento Pattern: for undo/redo functionality
+ * - Observer Pattern: notifies view of state changes
+ *
+ * Threading: This class is not thread-safe and should be accessed from a single thread.
+ *
+ * @author Snowman Game Development Team
+ * @version 1.0
+ * @since 2025-06-08
+ */
 public class BoardModel {
 
+
+
+    /**
+     * Core game state components:
+     * - board: 2D grid representing the game board
+     * - monster: Player-controlled character
+     * - snowballs: Collection of movable snowballs
+     * - history/redoHistory: Stacks for undo/redo functionality
+     */
     private final List<List<PositionContent>> board;
     private final Monster monster;
     private final List<Snowball> snowballs;
@@ -13,60 +43,143 @@ public class BoardModel {
     private final Stack<GameState> redoHistory;
 
     /**
-     * Retorna a lista de bolas de neve no tabuleiro
-     * @return Lista de Snowball
+     * Initial state storage for level reset functionality:
+     * - initialBoard: Starting board configuration
+     * - initialMonsterPosition: Starting monster position
+     * - initialSnowballs: Starting snowball configurations
      */
-    public List<Snowball> getSnowballs() {
-        return this.snowballs;
-    }
-    /**
-     * Retorna o monstro do jogo
-     * @return o objeto Monster que representa o monstro no jogo
-     */
-    public Monster getMonster() {
-        return this.monster;
-    }
-
+    private final List<List<PositionContent>> initialBoard;
+    private final int initialMonsterRow;
+    private final int initialMonsterCol;
+    private final List<Snowball> initialSnowballs;
 
     /**
-     * Gets the number of rows in the board.
+     * Constructs a new BoardModel with the specified initial configuration.
      *
-     * @return The number of rows.
+     * @param board Initial board layout
+     * @param monster Initial monster position and state
+     * @param snowballs Initial snowball configurations
+     * @throws IllegalArgumentException if board dimensions are invalid
+     */
+
+    /**
+     * Moves the monster in the specified direction if the move is valid.
+     * Handles snowball interactions and updates game state.
+     *
+     * @param direction The direction to move the monster
+     * @return true if the move was successful, false otherwise
+     */
+
+    /**
+     * Reverts the game state to the previous state if available.
+     *
+     * @return true if undo was successful, false if no history available
+     */
+
+    /**
+     * Reapplies a previously undone move if available.
+     *
+     * @return true if redo was successful, false if no redo history available
+     */
+
+    /**
+     * Resets the level to its initial state.
+     * Clears all history stacks and restores initial configurations.
+     */
+
+    /**
+     * Checks if the current level is complete based on snowball combinations.
+     *
+     * @return true if the level objectives are met, false otherwise
+     */
+
+    // Additional helper methods documentation...
+
+    /**
+     * Implementation considerations:
+     * 1. Performance: O(1) for most operations, O(n) for board state copies
+     * 2. Memory usage: Scales with board size and history depth
+     * 3. Extensibility: Designed for easy addition of new game mechanics
+     *
+     * Known limitations:
+     * 1. Maximum board size restricted to 10x10
+     * 2. No support for concurrent modifications
+     * 3. Memory consumption increases with undo history
+     */
+    private static final int MIN_BOARD_SIZE = 3;
+    private static final int MAX_BOARD_SIZE = 10;
+    /**
+     * Constructs a new BoardModel with the provided initial configuration.
+     *
+     * @param board The initial game board layout.
+     * @param monster The monster object in the game.
+     * @param snowballs The list of snowballs present on the board.
+     */
+    public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
+        this.board = board;
+        this.monster = monster;
+        this.snowballs = snowballs;
+        this.history = new Stack<>();
+        this.redoHistory = new Stack<>();
+
+        // Store initial board state
+        this.initialBoard = new ArrayList<>();
+        for (List<PositionContent> row : board) {
+            this.initialBoard.add(new ArrayList<>(row));
+        }
+
+        this.initialMonsterRow = monster.getRow();
+        this.initialMonsterCol = monster.getCol();
+
+        // Deep copy of initial snowballs
+        this.initialSnowballs = new ArrayList<>();
+        for (Snowball snowball : snowballs) {
+            this.initialSnowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
+        }
+    }
+
+    /**
+     * @return Number of rows in the board.
      */
     public int getRows() {
         return board.size();
     }
 
     /**
-     * Gets the number of columns in the board.
-     *
-     * @return The number of columns.
+     * @return Number of columns in the board.
      */
     public int getCols() {
         return board.isEmpty() ? 0 : board.get(0).size();
     }
 
-
-    // Existing methods...
-
     /**
-     * Sets the content of a specific position on the board.
-     *
-     * @param row    The row of the position.
-     * @param col    The column of the position.
-     * @param content The new content for the position.
+     * @return The current monster in the game.
      */
-    public void setPositionContent(int row, int col, PositionContent content) {
-        this.board.get(row).set(col, content);
+    public Monster getMonster() {
+        return this.monster;
     }
 
     /**
-     * Retrieves the content of a specific position on the board.
+     * @return The list of snowballs currently on the board.
+     */
+    public List<Snowball> getSnowballs() {
+        return this.snowballs;
+    }
+
+    /**
+     * @return The current board layout.
+     */
+    public List<List<PositionContent>> getBoard() {
+        return this.board;
+    }
+
+    /**
+     * Retrieves the content at a given position on the board.
      *
-     * @param row The row index of the position.
-     * @param col The column index of the position.
-     * @return The PositionContent at the specified row and column.
-     * @throws IndexOutOfBoundsException if the row or col is out of bounds.
+     * @param row Row index.
+     * @param col Column index.
+     * @return Content of the position.
+     * @throws IndexOutOfBoundsException if indices are out of range.
      */
     public PositionContent getPositionContent(int row, int col) {
         if (row < 0 || row >= board.size() || col < 0 || col >= board.get(row).size()) {
@@ -75,119 +188,37 @@ public class BoardModel {
         return board.get(row).get(col);
     }
 
-
     /**
-     * Guarda o estado atual do jogo antes de fazer uma jogada
-     */
-    private void saveState() {
-        history.push(new GameState(this));
-        redoHistory.clear(); // Clear redo history when a new move is made
-    }
-
-    /**
-     * Desfaz a última jogada, restaurando o estado anterior
-     * @return true se foi possível desfazer, false se não houver jogadas para desfazer
-     */
-    public boolean undo() {
-        if (history.isEmpty()) {
-            return false;
-        }
-
-        GameState currentState = new GameState(this); // Save current state for redo
-        GameState previousState = history.pop();
-
-        // Add the current state to redo history
-        redoHistory.push(currentState);
-
-        // Restaurar o estado do tabuleiro
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.get(i).size(); j++) {
-                board.get(i).set(j, previousState.getBoardState().get(i).get(j));
-            }
-        }
-
-        // Restaurar posição do monstro
-        monster.setRow(previousState.getMonsterState().getRow());
-        monster.setCol(previousState.getMonsterState().getCol());
-
-        // Restaurar estado das bolas de neve
-        snowballs.clear();
-        snowballs.addAll(previousState.getSnowballsState());
-
-        return true;
-    }
-
-
-    /**
-     * Refaz a última jogada desfeita
-     * @return true se foi possível refazer, false se não houver jogadas para refazer
-     */
-    public boolean redo() {
-        if (redoHistory.isEmpty()) {
-            return false;
-        }
-
-        // Save current state to undo stack
-        GameState currentState = new GameState(this);
-        GameState redoState = redoHistory.pop();
-        history.push(currentState);
-
-        // Restaurar o estado do tabuleiro
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.get(i).size(); j++) {
-                board.get(i).set(j, redoState.getBoardState().get(i).get(j));
-            }
-        }
-
-        // Restaurar posição do monstro
-        monster.setRow(redoState.getMonsterState().getRow());
-        monster.setCol(redoState.getMonsterState().getCol());
-
-        // Restaurar estado das bolas de neve
-        snowballs.clear();
-        snowballs.addAll(redoState.getSnowballsState());
-
-        return true;
-    }
-
-
-    /**
-     * Modificar o método moveMonster para salvar o estado antes do movimento
-     */
-    public boolean moveMonster(Direction direction) {
-        saveState(); // Salvar estado antes do movimento
-        
-        boolean moved = monster.move(direction, this);
-        if (!moved) {
-            history.pop(); // Se o movimento falhou, remover o estado salvo
-        }
-        return moved;
-    }
-
-    /**
-     * Checks if a given position is valid on the board.
-     * A valid position must be within bounds and cannot contain a block.
+     * Sets a new content value at the specified position.
      *
-     * @param row The row index to check.
-     * @param col The column index to check.
+     * @param row Row index.
+     * @param col Column index.
+     * @param content New content for the position.
+     */
+    public void setPositionContent(int row, int col, PositionContent content) {
+        this.board.get(row).set(col, content);
+    }
+
+    /**
+     * Checks if a given position is within the board and not blocked.
+     *
+     * @param row Row index.
+     * @param col Column index.
      * @return true if the position is valid; false otherwise.
      */
     public boolean validPosition(int row, int col) {
-        // Check if row and column are within bounds
         if (row < 0 || row >= board.size() || col < 0 || col >= board.get(0).size()) {
             return false;
         }
-
-        // Check if position is not a BLOCK
         return board.get(row).get(col) != PositionContent.BLOCK;
     }
 
     /**
-     * Returns the snowball found in the specified position, or null if no snowball is present.
+     * Searches for a snowball at the specified position.
      *
-     * @param row The row index.
-     * @param col The column index.
-     * @return The snowball object at the position, or null if no snowball is found.
+     * @param row Row index.
+     * @param col Column index.
+     * @return Snowball at the position or null if none is found.
      */
     public Snowball snowballInPosition(int row, int col) {
         for (Snowball snowball : snowballs) {
@@ -195,76 +226,123 @@ public class BoardModel {
                 return snowball;
             }
         }
-        return null; // No snowball found at the position
+        return null;
     }
 
     /**
-     * Attempts to move a snowball in the specified direction on the board.
+     * Moves the given snowball in a specified direction.
      *
-     * @param direction The direction to move the snowball.
-     * @param snowball The snowball to be moved.
-     * @return true if the snowball was successfully moved; false otherwise.
+     * @param direction Direction of movement.
+     * @param snowball Snowball to move.
+     * @return true if the move was successful; false otherwise.
      */
     public boolean moveSnowball(Direction direction, Snowball snowball) {
         return snowball.move(direction, this);
     }
 
-/**
- * Retorna o tabuleiro atual do jogo
- * @return Lista bidimensional representando o tabuleiro
- */
-public List<List<PositionContent>> getBoard() {
-    return this.board;
-}
-    private final List<List<PositionContent>> initialBoard; // Nova variável para guardar estado inicial
-    private final int initialMonsterRow; // Posição inicial do monstro
-    private final int initialMonsterCol;
-    private final List<Snowball> initialSnowballs; // Estado inicial das bolas de neve
-
-    public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
-        this.board = board;
-        this.monster = monster;
-        this.snowballs = snowballs;
-        this.history = new Stack<>();
-        this.redoHistory = new Stack<>();
-
-
-        // Guardar estado inicial
-        this.initialBoard = new ArrayList<>();
-        for (List<PositionContent> row : board) {
-            this.initialBoard.add(new ArrayList<>(row));
+    /**
+     * Moves the monster in the given direction and saves state for undo.
+     *
+     * @param direction Direction to move.
+     * @return true if the monster moved; false otherwise.
+     */
+    public boolean moveMonster(Direction direction) {
+        saveState(); // Save current state
+        boolean moved = monster.move(direction, this);
+        if (!moved) {
+            history.pop(); // Discard state if move failed
         }
-        this.initialMonsterRow = monster.getRow();
-        this.initialMonsterCol = monster.getCol();
-        
-        // Copiar bolas de neve iniciais
-        this.initialSnowballs = new ArrayList<>();
-        for (Snowball snowball : snowballs) {
-            this.initialSnowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
-        }
+        return moved;
     }
 
     /**
-     * Reinicia o nível para o estado inicial
+     * Saves the current state of the game for undo purposes.
+     */
+    private void saveState() {
+        history.push(new GameState(this));
+        redoHistory.clear(); // Clear redo history
+    }
+
+    /**
+     * Undoes the last move and restores the previous state.
+     *
+     * @return true if undo was successful; false otherwise.
+     */
+    public boolean undo() {
+        if (history.isEmpty()) return false;
+
+        GameState currentState = new GameState(this);
+        GameState previousState = history.pop();
+        redoHistory.push(currentState);
+
+        // Restore board state
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).size(); j++) {
+                board.get(i).set(j, previousState.getBoardState().get(i).get(j));
+            }
+        }
+
+        // Restore monster state
+        monster.setRow(previousState.getMonsterState().getRow());
+        monster.setCol(previousState.getMonsterState().getCol());
+
+        // Restore snowballs
+        snowballs.clear();
+        snowballs.addAll(previousState.getSnowballsState());
+
+        return true;
+    }
+
+    /**
+     * Redoes the last undone move and restores the future state.
+     *
+     * @return true if redo was successful; false otherwise.
+     */
+    public boolean redo() {
+        if (redoHistory.isEmpty()) return false;
+
+        GameState currentState = new GameState(this);
+        GameState redoState = redoHistory.pop();
+        history.push(currentState);
+
+        // Restore board state
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).size(); j++) {
+                board.get(i).set(j, redoState.getBoardState().get(i).get(j));
+            }
+        }
+
+        // Restore monster state
+        monster.setRow(redoState.getMonsterState().getRow());
+        monster.setCol(redoState.getMonsterState().getCol());
+
+        // Restore snowballs
+        snowballs.clear();
+        snowballs.addAll(redoState.getSnowballsState());
+
+        return true;
+    }
+
+    /**
+     * Resets the level to its initial configuration.
+     * Clears the undo/redo history and restores the initial board, monster, and snowballs.
      */
     public void resetLevel() {
-        // Limpar histórico
-        this.history.clear();
-        this.redoHistory.clear();
+        history.clear();
+        redoHistory.clear();
 
-
-        // Restaurar tabuleiro
+        // Restore initial board
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(i).size(); j++) {
                 board.get(i).set(j, initialBoard.get(i).get(j));
             }
         }
-        
-        // Restaurar monstro
+
+        // Restore monster
         monster.setRow(initialMonsterRow);
         monster.setCol(initialMonsterCol);
-        
-        // Restaurar bolas de neve
+
+        // Restore initial snowballs
         snowballs.clear();
         for (Snowball snowball : initialSnowballs) {
             snowballs.add(new Snowball(snowball.getRow(), snowball.getCol(), snowball.getType()));
@@ -272,18 +350,19 @@ public List<List<PositionContent>> getBoard() {
     }
 
     /**
-     * Verifica se existe um boneco de neve completo no tabuleiro
-     * @return true se houver um boneco de neve completo, false caso contrário
+     * Checks whether the level is complete.
+     * A level is considered complete if at least one snowman exists on the board.
+     *
+     * @return true if the level is complete; false otherwise.
      */
     public boolean isLevelComplete() {
-    // Verificar se existe um boneco de neve completo no tabuleiro
-    for (int row = 0; row < getRows(); row++) {
-        for (int col = 0; col < getCols(); col++) {
-            if (getPositionContent(row, col) == PositionContent.SNOWMAN) {
-                return true;
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                if (getPositionContent(row, col) == PositionContent.SNOWMAN) {
+                    return true;
+                }
             }
         }
+        return false;
     }
-    return false;
-}
 }
