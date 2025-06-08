@@ -5,51 +5,60 @@ import java.util.List;
 
 /**
  * The Level class represents the configuration and properties of a specific level in the Snowman game.
- *
+ * <p>
  * This class encapsulates the initial state of a level, including the board layout, the
  * starting position of the monster, the initial positions of snowballs, and the level's identifier number.
- * Through its methods, Level provides facilities to create a playable model (`BoardModel`) 
+ * Through its methods, Level provides facilities to create a playable model (`BoardModel`)
  * based on its stored configurations.
- *
+ * <p>
  * Key Responsibilities:
  * - Store the initial configuration of a level, including board layout, monster, and snowballs.
  * - Provide the ability to create a fresh instance of the game board (`BoardModel`) for this level.
- *
+ * <p>
  * Design Considerations:
  * - Deep copies are used to ensure immutability of initial configurations.
  * - Grouping and encapsulating level data simplifies level management and game initialization.
- * 
- * @version 1.0
- * @since 2025-06-08
+ *
+ * @author Ângelo Dias, Edgar Brito
  */
 public class Level {
-    
-    /** A deep copy of the initial board layout for the level. */
+
+    /**
+     * A deep copy of the initial board layout for the level.
+     */
     private final List<List<PositionContent>> initialBoard;
 
-    /** The starting row index of the monster on the board. */
+    /**
+     * The starting row index of the monster on the board.
+     */
     private final int monsterStartRow;
 
-    /** The starting column index of the monster on the board. */
+    /**
+     * The starting column index of the monster on the board.
+     */
     private final int monsterStartCol;
 
-    /** A list of snowballs present at the beginning of the level. */
+    /**
+     * A list of snowballs present at the beginning of the level.
+     */
     private final List<Snowball> initialSnowballs;
 
-    /** The unique number assigned to this level. */
+    /**
+     * The unique number assigned to this level.
+     */
     private final int levelNumber;
 
     /**
      * Constructs a new Level instance with the specified initial configuration parameters.
-     * 
+     * <p>
      * This constructor performs deep copies of the provided board layout and snowballs list to
      * ensure immutability of the initial level state.
      *
-     * @param board         A 2D list representing the initial board layout of the level.
-     * @param monsterRow    The starting row index of the monster.
-     * @param monsterCol    The starting column index of the monster.
-     * @param snowballs     A list of initial snowballs' positions and types.
-     * @param levelNumber   A unique number identifying the level.
+     * @param board       A 2D list representing the initial board layout of the level.
+     * @param monsterRow  The starting row index of the monster.
+     * @param monsterCol  The starting column index of the monster.
+     * @param snowballs   A list of initial snowballs' positions and types.
+     * @param levelNumber A unique number identifying the level.
      */
     public Level(List<List<PositionContent>> board, int monsterRow, int monsterCol,
                  List<Snowball> snowballs, int levelNumber) {
@@ -69,9 +78,9 @@ public class Level {
 
     /**
      * Creates a new instance of the `BoardModel` class based on this level's configuration.
-     * 
-     * This method generates a fresh game board with all components (board layout, monster, and snowballs) 
-     * in their starting positions. Deep copies of the components ensure that the new `BoardModel` 
+     * <p>
+     * This method generates a fresh game board with all components (board layout, monster, and snowballs)
+     * in their starting positions. Deep copies of the components ensure that the new `BoardModel`
      * is independent of other game states.
      *
      * @return A new `BoardModel` instance initialized with the level's configurations.

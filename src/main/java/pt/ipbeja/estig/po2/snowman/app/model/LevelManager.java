@@ -6,33 +6,36 @@ import java.util.List;
 
 /**
  * The LevelManager class is responsible for managing and providing access to different Levels in the Snowman game.
- *
+ * <p>
  * It encapsulates the initialization of game levels, tracks the current level being played,
  * and facilitates progression to subsequent levels. This class stores all the predefined
  * game levels and allows retrieval of level configurations through `BoardModel` instances.
- *
+ * <p>
  * Key Responsibilities:
  * - Initialize game levels with specific board layouts and starting configurations.
  * - Manage the progression between levels.
  * - Provide current level configurations in a structured manner.
- *
+ * <p>
  * Design Considerations:
  * - The levels are managed as a sequential list (`List<Level>`), where each Level is indexed starting at 0.
  * - The levels are predefined in the `initializeLevels` method.
- * 
- * @version 1.0
- * @since 2025-06-08
+ *
+ * @author Ângelo Dias, Edgar Brito
  */
 public class LevelManager {
-    /** List containing all predefined levels in the game. */
+    /**
+     * List containing all predefined levels in the game.
+     */
     private final List<Level> levels;
 
-    /** The index of the currently active level in the list of levels. */
+    /**
+     * The index of the currently active level in the list of levels.
+     */
     private int currentLevelIndex;
 
     /**
      * Constructs a new LevelManager instance and initializes all predefined levels.
-     *
+     * <p>
      * By default, the first level (`index 0`) is set as the active level upon instantiation.
      */
     public LevelManager() {
@@ -43,7 +46,7 @@ public class LevelManager {
 
     /**
      * Creates the initial board configuration for Level 1.
-     * 
+     * <p>
      * The method generates a 5x5 grid filled with snow (`PositionContent.SNOW`).
      *
      * @return A two-dimensional list representing the board for Level 1.
@@ -52,7 +55,7 @@ public class LevelManager {
         List<List<PositionContent>> board = new ArrayList<>();
         int rows = 5;
         int cols = 5;
-        
+
         // Create a 5x5 grid and fill with snow
         for (int i = 0; i < rows; i++) {
             List<PositionContent> row = new ArrayList<>();
@@ -61,13 +64,13 @@ public class LevelManager {
             }
             board.add(row);
         }
-        
+
         return board;
     }
 
     /**
      * Creates the initial board configuration for Level 2.
-     * 
+     * <p>
      * The method generates a 6x6 grid filled with snow (`PositionContent.SNOW`) and places
      * blocks (`PositionContent.BLOCK`) in a cross-shaped pattern in the center.
      *
@@ -98,7 +101,7 @@ public class LevelManager {
 
     /**
      * Initializes all predefined levels in the game.
-     *
+     * <p>
      * Each level is configured with its specific board layout, snowballs, monster starting position,
      * and a unique identifier. The levels are added to the `levels` list in sequential order.
      */
@@ -151,7 +154,7 @@ public class LevelManager {
 
     /**
      * Advances to the next level if available and retrieves its configuration.
-     *
+     * <p>
      * This method increments the `currentLevelIndex` if there is a subsequent level
      * and returns the configuration (`BoardModel`) of the next level.
      *

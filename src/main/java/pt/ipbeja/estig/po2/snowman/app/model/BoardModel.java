@@ -7,26 +7,23 @@ import java.util.Stack;
 /**
  * The BoardModel class represents the core game logic and state management for the Snowman game.
  * It manages the game board, monster movement, snowball interactions, and game state history.
- *
+ * <p>
  * Key responsibilities:
  * - Maintaining the game board state and layout
  * - Processing monster movements and validations
  * - Managing snowball combinations and positions
  * - Implementing undo/redo functionality
  * - Tracking game completion state
- *
+ * <p>
  * Design patterns used:
  * - Memento Pattern: for undo/redo functionality
  * - Observer Pattern: notifies view of state changes
- *
+ * <p>
  * Threading: This class is not thread-safe and should be accessed from a single thread.
  *
- * @author Snowman Game Development Team
- * @version 1.0
- * @since 2025-06-08
+ * @author Ângelo Dias, Edgar Brito
  */
 public class BoardModel {
-
 
 
     /**
@@ -100,7 +97,7 @@ public class BoardModel {
      * 1. Performance: O(1) for most operations, O(n) for board state copies
      * 2. Memory usage: Scales with board size and history depth
      * 3. Extensibility: Designed for easy addition of new game mechanics
-     *
+     * <p>
      * Known limitations:
      * 1. Maximum board size restricted to 10x10
      * 2. No support for concurrent modifications
@@ -108,11 +105,12 @@ public class BoardModel {
      */
     private static final int MIN_BOARD_SIZE = 3;
     private static final int MAX_BOARD_SIZE = 10;
+
     /**
      * Constructs a new BoardModel with the provided initial configuration.
      *
-     * @param board The initial game board layout.
-     * @param monster The monster object in the game.
+     * @param board     The initial game board layout.
+     * @param monster   The monster object in the game.
      * @param snowballs The list of snowballs present on the board.
      */
     public BoardModel(List<List<PositionContent>> board, Monster monster, List<Snowball> snowballs) {
@@ -191,8 +189,8 @@ public class BoardModel {
     /**
      * Sets a new content value at the specified position.
      *
-     * @param row Row index.
-     * @param col Column index.
+     * @param row     Row index.
+     * @param col     Column index.
      * @param content New content for the position.
      */
     public void setPositionContent(int row, int col, PositionContent content) {
@@ -233,7 +231,7 @@ public class BoardModel {
      * Moves the given snowball in a specified direction.
      *
      * @param direction Direction of movement.
-     * @param snowball Snowball to move.
+     * @param snowball  Snowball to move.
      * @return true if the move was successful; false otherwise.
      */
     public boolean moveSnowball(Direction direction, Snowball snowball) {

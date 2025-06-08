@@ -1,80 +1,130 @@
-``` markdown
-# Snowman
+❄️ Snowman Game ❄️
+🎮 Overview
+Snowman is a charming and strategic puzzle game where you control a monster tasked with pushing and combining snowballs to create complete snowmen. Each level introduces new challenges, requiring thoughtful planning and smart moves to progress.
 
-Snowman is a Java-based game that offers puzzle-solving gameplay where you move and interact with various game elements on the board, including snowmen, monsters, and obstacles.
+✨ Features
+Engaging Gameplay
+Control a monster to push and combine snowballs of different sizes on a grid.
 
----
+Multiple Levels
+Explore a variety of thoughtfully designed levels, increasing in complexity.
 
-## 🕹️ Features
+Unique Snowball Mechanics
 
-- **Graphical User Interface:** Smooth and interactive visual experience.
-- **Rich Game Mechanics:** Move snowballs, avoid monsters, and solve each level's unique challenges.
-- **Level Management:** Progress through multiple levels, each with its own objectives and complexity.
-- **Object-Oriented Design:** Well-structured codebase for easy maintenance and extension.
+Three snowball sizes: Small, Medium, Large
 
----
+Combine snowballs to form partial and full snowmen
 
-## 🚀 Getting Started
+Collect snow on the ground to grow snowballs
 
-### Prerequisites
+Intuitive Controls
 
-- **Java 17** or higher
-- **Maven** build tool
+Arrow keys for movement
 
-### Installation
+CTRL + Z to undo moves
 
-Clone the repository:
+CTRL + X to redo moves
 
-sh git clone https://github.com/angelodias01/Snowman cd Snowman
+R to restart the level
 
+Score Tracking & Leaderboard
+Keep track of your moves and compete for the best score.
 
-Build the application:
+Save & Load Progress
+Save your game state anytime and pick up where you left off.
 
-sh mvn clean install
+⚙️ Technical Architecture
+Core Modules
+Component	Description
+BoardModel	Handles the game state, board layout, and elements
+GameState	Manages undo/redo snapshots and game history
+Snowball	Implements snowball behaviors and combination logic
+Monster	Controls player movement and interactions
 
+Key Systems
+State Management — Undo, redo, and reset level functionality
 
-### Running the Game
+Movement & Collision — Ensures valid moves within board boundaries
 
-After building, you can launch the game with:
+Snowball Mechanics — Growth and combination rules for snowballs
 
-sh mvn exec:java -Dexec.mainClass="pt.ipbeja.estig.po2.snowman.app.gui.SnowmanGUI"
+Persistence — Save/load game progress and leaderboard data
 
+🚀 Getting Started
+Prerequisites
+Java 17 or later
 
-> Replace the main class if a different one is used for launching the GUI.
+JavaFX runtime installed and configured
 
----
+Installation Steps
+bash
+Copiar
+Editar
+git clone https://github.com/angelodias01/Snowman.git
+cd snowman-game
 
-## 📂 Project Structure
+# Open in your favorite Java IDE, build and run
+🎮 How to Play
+Action	Control
+Move Monster	Arrow Keys
+Undo Move	CTRL + Z
+Redo Move	CTRL + X
+Restart Level	R
 
-- `src/main/java/pt/ipbeja/estig/po2/snowman/app/gui/`  
-  Graphical user interface (GUI) components
-- `src/main/java/pt/ipbeja/estig/po2/snowman/app/model/`  
-  Core game logic and mechanics
-- `src/main/resources/`  
-  Static resources and configuration files
+Push snowballs to combine them and build snowmen.
 
----
+Collect snow from the ground to grow snowballs.
 
-## 📦 Technologies
+Use undo/redo to refine your strategy.
 
-- Java 17
-- Maven
-- Swing or similar Java GUI framework
+🧊 Game Rules & Snowball Combinations
+Snowball Sizes:
+Small (S)
 
----
+Medium (M)
 
-## 🤝 Contributing
+Large (L)
 
+Combining Snowballs:
+Combination	Result
+Small + Medium	Medium-Small (partial)
+Small + Large	Large-Small (partial)
+Medium + Large	Large-Medium (partial)
+
+Creating Complete Snowmen:
+Combination	Result
+Large-Medium + Small	Complete Snowman
+Large-Small + Medium	Complete Snowman
+Medium-Small + Large	Complete Snowman
+
+💾 Save System
+Saved games stored in Documents/Snowman/
+
+Each save contains:
+
+Board layout and snowball positions
+
+Monster location
+
+Movement history
+
+Leaderboard tracks player names, scores, and completion times.
+
+🌟 Future Enhancements
+More challenging levels
+
+Level editor for custom puzzles
+
+Multiplayer modes
+
+Achievement and reward system
+
+Immersive sound effects and background music
+
+👥 Authors
 Ângelo Dias
+
 Edgar Brito
 
----
-
-## 📝 License
-
-IPBEJA PO2 Snowman
-
----
-
-**For questions or support, please open an issue in this repository.**
-```
+🤝 Contribution & Contact
+Found a bug or want to add a feature? Open an issue or submit a pull request — contributions are welcome!

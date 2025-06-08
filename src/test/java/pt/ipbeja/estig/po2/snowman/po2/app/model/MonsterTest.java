@@ -22,15 +22,14 @@ public class MonsterTest {
 
     @BeforeEach
     public void setUp() {
-        monster = new Monster(2,2);
+        monster = new Monster(2, 2);
 
         for (int i = 0; i < rows; i++) {
             List<PositionContent> row = new ArrayList<>();
             for (int j = 0; j < cols; j++) {
-                if(i == 0) {
+                if (i == 0) {
                     row.add(PositionContent.SNOW);
-                }
-                else{
+                } else {
                     row.add(PositionContent.NO_SNOW);
                 }
             }
@@ -44,8 +43,7 @@ public class MonsterTest {
 
     @Test
     @DisplayName("Move the monster to the left")
-    void testMonsterToTheLeft()
-    {
+    void testMonsterToTheLeft() {
         monster.move(Direction.LEFT, board);
 
         assertEquals(2, monster.getRow());
@@ -54,7 +52,7 @@ public class MonsterTest {
 
     @Test
     @DisplayName("Move the monster up")
-    void testMonsterToUp(){
+    void testMonsterToUp() {
         monster.move(Direction.UP, board);
 
         assertEquals(1, monster.getRow());
@@ -63,7 +61,7 @@ public class MonsterTest {
 
     @Test
     @DisplayName("Test invalid monster move")
-    void testMonsterInvalidMove(){
+    void testMonsterInvalidMove() {
         boolean validMove = board.moveMonster(Direction.RIGHT);
 
         assertEquals(2, monster.getRow());
