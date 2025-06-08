@@ -60,8 +60,8 @@ public class LevelManager {
         List<List<PositionContent>> board1 = createLevel1Board();
         List<Snowball> snowballs1 = Arrays.asList(
                 new Snowball(2, 3, SnowballType.SMALL),
-                new Snowball(1, 2, SnowballType.MID),
-                new Snowball(3, 1, SnowballType.BIG)
+                new Snowball(1, 2, SnowballType.SMALL),
+                new Snowball(3, 1, SnowballType.SMALL)
         );
         levels.add(new Level(board1, 0, 0, snowballs1, 1));
 
@@ -69,8 +69,8 @@ public class LevelManager {
         List<List<PositionContent>> board2 = createLevel2Board();
         List<Snowball> snowballs2 = Arrays.asList(
                 new Snowball(1, 1, SnowballType.SMALL),  // Canto superior esquerdo
-                new Snowball(1, 4, SnowballType.MID),    // Canto superior direito
-                new Snowball(4, 1, SnowballType.BIG)     // Canto inferior esquerdo
+                new Snowball(1, 4, SnowballType.SMALL),    // Canto superior direito
+                new Snowball(4, 1, SnowballType.SMALL)     // Canto inferior esquerdo
         );
         levels.add(new Level(board2, 0, 0, snowballs2, 2));
     }

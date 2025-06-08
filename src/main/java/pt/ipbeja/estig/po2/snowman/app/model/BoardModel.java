@@ -11,7 +11,8 @@ public class BoardModel {
     private final List<Snowball> snowballs;
     // ... outros atributos existentes ...
     private final Stack<GameState> history;
-    
+    private final Stack<GameState> redoHistory;
+
     /**
      * Retorna a lista de bolas de neve no tabuleiro
      * @return Lista de Snowball
@@ -81,8 +82,9 @@ public class BoardModel {
      */
     private void saveState() {
         history.push(new GameState(this));
+        redoHistory.clear(); // Clear redo history when a new move is made
     }
-    
+
     /**
      * Desfaz a última jogada, restaurando o estado anterior
      * @return true se foi possível desfazer, false se não houver jogadas para desfazer
@@ -91,27 +93,65 @@ public class BoardModel {
         if (history.isEmpty()) {
             return false;
         }
-        
+
+        GameState currentState = new GameState(this); // Save current state for redo
         GameState previousState = history.pop();
-        
+
+        // Add the current state to redo history
+        redoHistory.push(currentState);
+
         // Restaurar o estado do tabuleiro
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(i).size(); j++) {
                 board.get(i).set(j, previousState.getBoardState().get(i).get(j));
             }
         }
-        
+
         // Restaurar posição do monstro
         monster.setRow(previousState.getMonsterState().getRow());
         monster.setCol(previousState.getMonsterState().getCol());
-        
+
         // Restaurar estado das bolas de neve
         snowballs.clear();
         snowballs.addAll(previousState.getSnowballsState());
-        
+
         return true;
     }
-    
+
+
+    /**
+     * Refaz a última jogada desfeita
+     * @return true se foi possível refazer, false se não houver jogadas para refazer
+     */
+    public boolean redo() {
+        if (redoHistory.isEmpty()) {
+            return false;
+        }
+
+        // Save current state to undo stack
+        GameState currentState = new GameState(this);
+        GameState redoState = redoHistory.pop();
+        history.push(currentState);
+
+        // Restaurar o estado do tabuleiro
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).size(); j++) {
+                board.get(i).set(j, redoState.getBoardState().get(i).get(j));
+            }
+        }
+
+        // Restaurar posição do monstro
+        monster.setRow(redoState.getMonsterState().getRow());
+        monster.setCol(redoState.getMonsterState().getCol());
+
+        // Restaurar estado das bolas de neve
+        snowballs.clear();
+        snowballs.addAll(redoState.getSnowballsState());
+
+        return true;
+    }
+
+
     /**
      * Modificar o método moveMonster para salvar o estado antes do movimento
      */
@@ -187,7 +227,9 @@ public List<List<PositionContent>> getBoard() {
         this.monster = monster;
         this.snowballs = snowballs;
         this.history = new Stack<>();
-        
+        this.redoHistory = new Stack<>();
+
+
         // Guardar estado inicial
         this.initialBoard = new ArrayList<>();
         for (List<PositionContent> row : board) {
@@ -209,7 +251,9 @@ public List<List<PositionContent>> getBoard() {
     public void resetLevel() {
         // Limpar histórico
         this.history.clear();
-        
+        this.redoHistory.clear();
+
+
         // Restaurar tabuleiro
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(i).size(); j++) {

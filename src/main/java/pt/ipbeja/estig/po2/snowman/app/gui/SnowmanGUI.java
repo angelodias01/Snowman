@@ -1,7 +1,9 @@
 package pt.ipbeja.estig.po2.snowman.app.gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
@@ -16,9 +18,19 @@ public class SnowmanGUI extends Application {
     private BoardModel boardModel;
     private SnowmanBoard snowmanBoard;
     private LevelManager levelManager;
+    private GameAudio audioPlayer;
+    private String playerName;
 
     @Override
     public void start(Stage stage) {
+        if (!getUserName()) {
+            // If user cancels the dialog, close the application
+            Platform.exit();
+            return;
+        }
+
+
+        this.audioPlayer = new GameAudio();
         this.levelManager = new LevelManager();
         this.boardModel = createInitialBoard();
         
@@ -34,9 +46,10 @@ public class SnowmanGUI extends Application {
         stage.setScene(scene);
         stage.setTitle("Jogo do Boneco de Neve - Nível 1");
 
+        audioPlayer.play("mus1.wav");
+
         // Requisitar foco para o tabuleiro
         snowmanBoard.requestFocus();
-
         stage.show();
     }
 
@@ -96,6 +109,28 @@ public class SnowmanGUI extends Application {
             alert.showAndWait();
         }
     }
+
+    private boolean getUserName() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nome do Jogador");
+        dialog.setHeaderText("Bem-vindo ao Jogo do Boneco de Neve!");
+        dialog.setContentText("Por favor, insira seu nome (máximo 3 caracteres):");
+
+        dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 3) {
+                dialog.getEditor().setText(oldValue);
+            }
+        });
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent() && !result.get().trim().isEmpty()) {
+            playerName = result.get().toUpperCase().trim();
+            return true;
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         launch();
