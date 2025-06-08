@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import pt.ipbeja.estig.po2.snowman.app.model.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,24 +20,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The main JavaFX application class for the Snowman game.
+ * <p>
+ * This class is responsible for setting up the primary stage, initializing
+ * the game components such as the board, audio player, level manager,
+ * and leaderboard panel. It handles user input for the player name,
+ * loads the initial game board, and manages the overall game UI.
+ * <p>
+ * Key features:
+ * >Prompts the player to enter their name before starting the game.</li>
+ * >Initializes the game board and user interface components.</li>
+ * >Sets up the SnowmanBoard for gameplay and handles level completion events.</li>
+ * >Displays the leaderboard on the right side of the window.</li>
+ * >Plays background audio during gameplay.</li>
+ * <p>
+ * Extends {@link Application} to launch the JavaFX GUI.
+ * </p>
+ *
+ * @author Ângelo Dias
+ * @author Edgar Brito
+ */
 public class SnowmanGUI extends Application {
     private BoardModel boardModel;
     private SnowmanBoard snowmanBoard;
     private LevelManager levelManager;
     private GameAudio audioPlayer;
     private String playerName;
-    private VBox leaderboardPanel;  // Add this field
+    private VBox leaderboardPanel;
     private ListView<String> leaderboardListView;
-    private static final double PADDING_VALUE = 10.0;
 
+    /**
+     * The main entry point for the JavaFX application.
+     * Initializes the game window, game components, and user interface.
+     * Requests the player's name before launching the game.
+     *
+     * @param stage The primary stage for this application, onto which
+     *              the application scene can be set.
+     */
     @Override
     public void start(Stage stage) {
         if (!getUserName()) {
-            // If user cancels the dialog, close the application
             Platform.exit();
             return;
         }
-
 
         this.audioPlayer = new GameAudio();
         this.levelManager = new LevelManager();
@@ -44,22 +71,18 @@ public class SnowmanGUI extends Application {
 
         createLeaderboardPanel();
 
-        // Criar e inicializar o SnowmanBoard com o handler de conclusão de nível
         this.snowmanBoard = new SnowmanBoard(boardModel, this::handleLevelComplete, playerName);
 
-        // Criar o layout raiz
         BorderPane root = new BorderPane();
         root.setCenter(snowmanBoard);
         root.setRight(leaderboardPanel);
 
-        // Configurar a cena e o palco
         Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
         stage.setTitle("SnowMan Game - Level 1");
 
         audioPlayer.play("mus1.wav");
 
-        // Requisitar foco para o tabuleiro
         snowmanBoard.requestFocus();
 
         updateLeaderboard();
@@ -67,6 +90,13 @@ public class SnowmanGUI extends Application {
         stage.show();
     }
 
+    /**
+     * Creates the initial game board configuration.
+     * <p>
+     * Constructs a 5x5 grid filled with snow and places some initial snowballs and the monster.
+     *
+     * @return A {@link BoardModel} representing the starting state of the game board.
+     */
     private BoardModel createInitialBoard() {
         // Criar um tabuleiro 5x5
         List<List<PositionContent>> grid = new ArrayList<>();
@@ -78,12 +108,10 @@ public class SnowmanGUI extends Application {
             grid.add(row);
         }
 
-        // Adicionar alguns elementos ao tabuleiro
         grid.get(2).set(2, PositionContent.SNOW);
         grid.get(1).set(1, PositionContent.SNOW);
         grid.get(3).set(3, PositionContent.SNOW);
 
-        // Criar o monstro e as bolas de neve
         Monster monster = new Monster(0, 0);
         List<Snowball> snowballs = new ArrayList<>();
         snowballs.add(new Snowball(2, 3, SnowballType.SMALL));
@@ -94,7 +122,15 @@ public class SnowmanGUI extends Application {
     }
 
     /**
-     * Handler chamado quando um nível é completado
+     * Handles the event when the current level is completed.
+     * <p>
+     * If there is a next level available, prompts the user to proceed to it.
+     * If the user confirms, loads the next level and updates the UI accordingly.
+     * <p>
+     * If there are no more levels, saves the game state and score,
+     * updates the leaderboard, and shows a completion message.
+     *
+     * @param unused A placeholder parameter (not used).
      */
     private void handleLevelComplete(Void unused) {
         if (levelManager.hasNextLevel()) {
@@ -111,7 +147,6 @@ public class SnowmanGUI extends Application {
                 stage.setTitle("Snowman Game - Level " + (levelManager.getCurrentLevelIndex() + 1));
             }
         } else {
-            // Salvar pontuação apenas quando o jogo terminar
             snowmanBoard.saveGameToFile();
             snowmanBoard.saveScore();
             updateLeaderboard();
@@ -124,6 +159,15 @@ public class SnowmanGUI extends Application {
         }
     }
 
+    /**
+     * Prompts the user to enter their name before starting the game.
+     * <p>
+     * Limits the player name input to a maximum of 3 characters.
+     * Converts the entered name to uppercase and trims whitespace.
+     * If the user cancels or enters an invalid name, returns false.
+     *
+     * @return {@code true} if a valid player name was entered; {@code false} otherwise.
+     */
     private boolean getUserName() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Player's name");
@@ -145,6 +189,13 @@ public class SnowmanGUI extends Application {
         return false;
     }
 
+    /**
+     * Creates the leaderboard panel UI component.
+     * <p>
+     * The panel includes a title label, a list view to display leaderboard entries,
+     * and a refresh button to update the leaderboard.
+     * The panel is padded and organized vertically.
+     */
     private void createLeaderboardPanel() {
         leaderboardPanel = new VBox(10);  // usando valor direto ao invés de PADDING_VALUE
         leaderboardPanel.setPadding(new javafx.geometry.Insets(10, 10, 10, 10));
@@ -162,6 +213,13 @@ public class SnowmanGUI extends Application {
         leaderboardPanel.getChildren().addAll(titleLabel, leaderboardListView, refreshButton);
     }
 
+    /**
+     * Updates the leaderboard ListView by reading the scores from the leaderboard file.
+     * <p>
+     * If the leaderboard file does not exist, displays a placeholder message.
+     * If an error occurs while reading the file, displays an error message.
+     * The leaderboard is displayed with a header and the list of scores.
+     */
     private void updateLeaderboard() {
         try {
             Path leaderboardPath = Paths.get(System.getProperty("user.home"), "Documents", "Snowman", "leaderboard.txt");
@@ -174,11 +232,9 @@ public class SnowmanGUI extends Application {
             List<String> scores = Files.readAllLines(leaderboardPath);
             leaderboardListView.getItems().clear();
 
-            // Add header
             leaderboardListView.getItems().add(String.format("%-3s | %-4s | %-10s", "USER", "SCORE", "DATE"));
             leaderboardListView.getItems().add("--------------------------");
 
-            // Add scores
             scores.forEach(score -> leaderboardListView.getItems().add(score));
 
         } catch (IOException e) {
@@ -188,7 +244,11 @@ public class SnowmanGUI extends Application {
         }
     }
 
-
+    /**
+     * Main entry point for launching the Snowman GUI application.
+     *
+     * @param args command-line arguments (not used).
+     */
     public static void main(String[] args) {
         launch();
     }
