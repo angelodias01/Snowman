@@ -47,16 +47,15 @@ public class SnowmanGUI extends Application {
         this.audioPlayer = new GameAudio();
 >>>>>>> Stashed changes
         this.levelManager = new LevelManager();
-        this.boardModel = createInitialBoard();
-        
-        // Criar e inicializar o SnowmanBoard com o handler de conclusão de nível
+        this.boardModel = createInitialBoard(); // Load the initial level
+
+        // Initialize the main game board with a callback for when a level is completed
         this.snowmanBoard = new SnowmanBoard(boardModel, this::handleLevelComplete);
 
-        // Criar o layout raiz
+        // Set up the UI layout using a BorderPane
         BorderPane root = new BorderPane();
-        root.setCenter(snowmanBoard);
+        root.setCenter(snowmanBoard); // Place the board at the center of the window
 
-        // Configurar a cena e o palco
         // Create and set the scene
         Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
@@ -80,7 +79,6 @@ public class SnowmanGUI extends Application {
      * @return a fully initialized BoardModel object
      */
     private BoardModel createInitialBoard() {
-        // Criar um tabuleiro 5x5
         List<List<PositionContent>> grid = new ArrayList<>();
 
         // Fill the board with SNOW content
@@ -92,13 +90,11 @@ public class SnowmanGUI extends Application {
             grid.add(row);
         }
 
-        // Adicionar alguns elementos ao tabuleiro
         // (Optional) Customize specific cells — here we leave them as SNOW
         grid.get(2).set(2, PositionContent.SNOW);
         grid.get(1).set(1, PositionContent.SNOW);
         grid.get(3).set(3, PositionContent.SNOW);
 
-        // Criar o monstro e as bolas de neve
         // Create a monster at the top-left corner
         Monster monster = new Monster(0, 0);
 
@@ -112,14 +108,13 @@ public class SnowmanGUI extends Application {
     }
 
     /**
-     * Handler chamado quando um nível é completado
      * Callback executed when a level is completed by the player.
      * Offers to load the next level if available, otherwise congratulates the player.
      */
     private void handleLevelComplete(Void unused) {
-        // Salvar o jogo primeiro
+        // Save the current game state
         snowmanBoard.saveGameToFile();
-        
+
         if (levelManager.hasNextLevel()) {
             // Ask the player if they want to proceed to the next level
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -129,11 +124,9 @@ public class SnowmanGUI extends Application {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Carregar próximo nível
                 // Load and display the next level
                 this.boardModel = levelManager.loadNextLevel();
                 snowmanBoard.loadNewLevel(boardModel);
-                // Atualizar título da janela
 
                 // Update the window title to reflect the new level
                 Stage stage = (Stage) snowmanBoard.getScene().getWindow();
@@ -184,6 +177,6 @@ public class SnowmanGUI extends Application {
      */
 >>>>>>> Stashed changes
     public static void main(String[] args) {
-        launch();
+        launch(); // Triggers the JavaFX application lifecycle
     }
 }
