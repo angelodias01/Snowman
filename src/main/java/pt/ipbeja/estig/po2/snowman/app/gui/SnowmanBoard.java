@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 import java.time.LocalTime;
 
 /**
- * The SnowmanBoard class is the main GUI component responsible for displaying the game board,
+ * The SnowmanBoard class is the main GUI part responsible for displaying the game board,
  * handling user interactions (keyboard and button controls), and managing game state updates.
  * <p>
  * This class uses JavaFX controls and layout panes to visually represent the game board,
@@ -54,7 +54,7 @@ public class SnowmanBoard extends VBox implements View {
     private BoardModel boardModel;
     private final GridPane board;
     private final TextArea movementsLog;
-    private String playerName;
+    private final String playerName;
     private int score;
     private static final String LEADERBOARD_FILE = "leaderboard.txt";
     private int totalGameScore = 0;
@@ -472,9 +472,9 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     /**
-     * Writes the movements log header and the logged movements to the PrintWriter.
+     * Writes the movement log header and the logged movements to the PrintWriter.
      *
-     * @param writer the PrintWriter used to write the movements data
+     * @param writer the PrintWriter used to write the movement data
      */
     private void saveMovements(PrintWriter writer) {
         writer.println("\n===  MOVEMENTS MADE ===");
