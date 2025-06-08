@@ -407,37 +407,44 @@ public class SnowmanBoard extends VBox implements View {
             }
 
             List<String> scores = Files.readAllLines(leaderboardPath);
-        
             if (scores.isEmpty()) {
                 showNoLeaderboardAlert();
                 return;
             }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Leaderboard");
-            alert.setHeaderText("Top Scores");
-        
-            TextArea textArea = new TextArea();
-            textArea.setEditable(false);
-            textArea.setPrefRowCount(10);
-            textArea.setPrefColumnCount(40);
-        
-            // Add header
+            Alert alert = createLeaderboardAlert();
+            TextArea textArea = createTextArea();
             StringBuilder content = new StringBuilder();
-            content.append(String.format("%-3s | %-4s | %-19s%n", "USR", "SCOR", "DATE"));
-            content.append("--------------------------------\n");
-        
-            // Add all scores
+
+            appendHeader(content);
             scores.forEach(score -> content.append(score));
-        
+
             textArea.setText(content.toString());
-        
             alert.getDialogPane().setContent(textArea);
             alert.showAndWait();
-        
         } catch (IOException e) {
             showErrorAlert(e);
         }
+    }
+
+    private Alert createLeaderboardAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Leaderboard");
+        alert.setHeaderText("Top Scores");
+        return alert;
+    }
+
+    private TextArea createTextArea() {
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setPrefRowCount(10);
+        textArea.setPrefColumnCount(40);
+        return textArea;
+    }
+
+    private void appendHeader(StringBuilder content) {
+        content.append(String.format("%-3s | %-4s | %-19s%n", "USR", "SCOR", "DATE"));
+        content.append("--------------------------------\n");
     }
 
     private void showNoLeaderboardAlert() {
