@@ -134,7 +134,7 @@ public class SnowmanBoard extends VBox implements View {
      * @param newBoard The new BoardModel instance for the new level.
      */
     public void loadNewLevel(BoardModel newBoard) {
-        this.totalGameScore += this.score; // Acumular pontuação do nível anterior
+        this.totalGameScore += this.score;
         this.score = 0;
         this.boardModel = newBoard;
         this.movementsLog.clear();
@@ -574,7 +574,7 @@ public class SnowmanBoard extends VBox implements View {
     /**
      * Appends the player's score entry to the leaderboard file.
      * Creates the file if it does not exist.
-     *
+
      * The entry format is: playerName | finalScore | timestamp
      *
      * @param filePath the path to the leaderboard file
@@ -611,7 +611,7 @@ public class SnowmanBoard extends VBox implements View {
      */
     private String formatPosition(int row, int col) {
         char colLetter = (char) ('A' + col);
-        // Row + 1 porque arrays começam em 0, mas queremos mostrar começando em 1
+
         return String.format("(%d, %c)", row + 1, colLetter);
     }
 }
