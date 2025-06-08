@@ -25,21 +25,42 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import java.util.function.Consumer;
 
+/**
+ * SnowmanBoard is a JavaFX component that visually represents the game board
+ * and manages user interactions such as movement, undo/redo, reset, and saving.
+ */
 public class SnowmanBoard extends VBox implements View {
+
+    // Callback function triggered when the level is completed
     private final Consumer<Void> onLevelComplete;
+
+    // Game control buttons
     private final Button resetButton;
     private Button undoButton;
     private Button redoButton;
+
+    // Current game model representing the board state
     private BoardModel boardModel;
+
+    // JavaFX layout container for the visual board
     private final GridPane board;
+
+    // Text area to log all player movements
     private final TextArea movementsLog;
 
-    // Imagens para os elementos do jogo
+    // Game asset images
     private final Image snowImage = new Image(getClass().getResourceAsStream("/images/snow.png"));
     private final Image blockImage = new Image(getClass().getResourceAsStream("/images/block.png"));
     private final Image snowmanImage = new Image(getClass().getResourceAsStream("/images/snowman.png"));
     private final Image monsterImage = new Image(getClass().getResourceAsStream("/images/monster.png"));
 
+    /**
+     * Constructor for SnowmanBoard.
+     * Initializes the visual components, sets up event listeners, and binds to the game model.
+     *
+     * @param boardModel the model representing the current game state
+     * @param onLevelComplete callback to trigger when the level is completed
+     */
     public SnowmanBoard(BoardModel boardModel, Consumer<Void> onLevelComplete) {
         this.boardModel = boardModel;
         this.onLevelComplete = onLevelComplete;
@@ -54,39 +75,50 @@ public class SnowmanBoard extends VBox implements View {
         configureUndoButton();
         configureRedoButton();
 
+        // Layout for control buttons
         HBox controls = new HBox(10);
         controls.setAlignment(Pos.TOP_LEFT);
-        controls.getChildren().add(resetButton);
-        controls.getChildren().add(undoButton);
-        controls.getChildren().add(redoButton);
+        controls.getChildren().addAll(resetButton, undoButton, redoButton);
 
         setupBoard();
         this.getChildren().addAll(board, controls, movementsLog);
 
+        // Enable keyboard input
         this.setOnKeyPressed(this::handleKeyPress);
         this.setFocusTraversable(true);
     }
 
+    /**
+     * Configures the undo button and its associated event handler.
+     */
     private void configureUndoButton() {
         this.undoButton = new Button("Undo Move(CTRL+Z)");
         this.undoButton.setOnAction(e -> {
             if (boardModel.undo()) {
-                movementsLog.appendText("Movimento desfeito\n");
+                movementsLog.appendText("Move undone\n");
                 updateBoard();
             }
         });
     }
 
+    /**
+     * Configures the redo button and its associated event handler.
+     */
     private void configureRedoButton() {
         this.redoButton = new Button("Redo Move(CTRL+X)");
         this.redoButton.setOnAction(e -> {
             if (boardModel.redo()) {
-                movementsLog.appendText("Movimento refeito\n");
+                movementsLog.appendText("Move redone\n");
                 updateBoard();
             }
         });
     }
 
+    /**
+     * Loads a new level into the board.
+     *
+     * @param newBoard the new board model to load
+     */
     public void loadNewLevel(BoardModel newBoard) {
         this.boardModel = newBoard;
         this.movementsLog.clear();
@@ -95,78 +127,79 @@ public class SnowmanBoard extends VBox implements View {
     }
 
     /**
-     * Reinicia o nível atual
+     * Resets the current level after user confirmation.
      */
     private void resetLevel() {
-        // Mostrar diálogo de confirmação
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Reiniciar Nível");
-        alert.setHeaderText("Tem certeza que deseja reiniciar o nível?");
-        alert.setContentText("Todo o progresso será perdido.");
+        alert.setTitle("Reset Level");
+        alert.setHeaderText("Are you sure you want to reset the level?");
+        alert.setContentText("All progress will be lost.");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Reiniciar o nível
             boardModel.resetLevel();
-            // Limpar o log de movimentos
             movementsLog.clear();
-            movementsLog.appendText("Nível reiniciado\n");
-            // Atualizar a visualização
+            movementsLog.appendText("Level reset\n");
             updateBoard();
-            // Retomar o foco para capturar eventos de teclado
             this.requestFocus();
         }
     }
 
-    // Adicionar também ao handleKeyPress para permitir reiniciar com tecla R
+    /**
+     * Handles keyboard input for movement and shortcuts.
+     *
+     * @param event the key event
+     */
     private void handleKeyPress(KeyEvent event) {
+        // Handle shortcuts
         if (event.getCode() == KeyCode.R) {
             resetLevel();
             event.consume();
             return;
         }
 
-        // Verificar primeiro se é CTRL+Z para undo
         if (event.isControlDown() && event.getCode() == KeyCode.Z) {
             if (boardModel.undo()) {
-                movementsLog.appendText("Movimento desfeito\n");
+                movementsLog.appendText("Move undone\n");
                 updateBoard();
             }
             event.consume();
             return;
         }
 
-        // Verificar se é CTRL+X para redo
         if (event.isControlDown() && event.getCode() == KeyCode.X) {
             if (boardModel.redo()) {
-                movementsLog.appendText("Movimento refeito\n");
+                movementsLog.appendText("Move redone\n");
                 updateBoard();
             }
             event.consume();
             return;
         }
 
-        // Código existente para movimentação
-        Direction direction = null;
-        switch (event.getCode()) {
-            case UP -> direction = Direction.UP;
-            case DOWN -> direction = Direction.DOWN;
-            case LEFT -> direction = Direction.LEFT;
-            case RIGHT -> direction = Direction.RIGHT;
-        }
+        // Handle directional movement
+        Direction direction = switch (event.getCode()) {
+            case UP -> Direction.UP;
+            case DOWN -> Direction.DOWN;
+            case LEFT -> Direction.LEFT;
+            case RIGHT -> Direction.RIGHT;
+            default -> null;
+        };
 
         if (direction != null) {
             boolean moved = boardModel.moveMonster(direction);
             if (moved) {
-                movementsLog.appendText("Monstro moveu para " + direction + "\n");
+                movementsLog.appendText("Monster moved " + direction + "\n");
                 updateBoard();
             }
         }
 
-        // Consumir o evento para evitar propagação
         event.consume();
     }
 
+    /**
+     * Updates the board’s visual representation to reflect the model.
+     * Also checks for level completion.
+     */
     @Override
     public void updateBoard() {
         setupBoard();
@@ -175,26 +208,25 @@ public class SnowmanBoard extends VBox implements View {
         }
     }
 
+    /**
+     * Sets up the visual grid with headers and content based on the model.
+     */
     private void setupBoard() {
         board.getChildren().clear();
 
-        // Adicionar letras para as colunas
-        for (int col = 0; col <= boardModel.getCols(); col++) {
-            if (col > 0) {
-                Label colLabel = new Label(String.valueOf((char)('A' + col - 1)));
-                board.add(colLabel, col, 0);
-            }
+        // Column headers (A, B, C...)
+        for (int col = 1; col <= boardModel.getCols(); col++) {
+            Label colLabel = new Label(String.valueOf((char) ('A' + col - 1)));
+            board.add(colLabel, col, 0);
         }
 
-        // Adicionar números para as linhas
-        for (int row = 0; row <= boardModel.getRows(); row++) {
-            if (row > 0) {
-                Label rowLabel = new Label(String.valueOf(row));
-                board.add(rowLabel, 0, row);
-            }
+        // Row headers (1, 2, 3...)
+        for (int row = 1; row <= boardModel.getRows(); row++) {
+            Label rowLabel = new Label(String.valueOf(row));
+            board.add(rowLabel, 0, row);
         }
 
-        // Desenhar o tabuleiro
+        // Populate cells
         for (int row = 0; row < boardModel.getRows(); row++) {
             for (int col = 0; col < boardModel.getCols(); col++) {
                 Label cell = createCell(row, col);
@@ -203,6 +235,13 @@ public class SnowmanBoard extends VBox implements View {
         }
     }
 
+    /**
+     * Creates a label for a given board cell, with an image representing its content.
+     *
+     * @param row the row index
+     * @param col the column index
+     * @return a configured Label node
+     */
     private Label createCell(int row, int col) {
         Label cell = new Label();
         cell.setMinSize(50, 50);
@@ -212,32 +251,30 @@ public class SnowmanBoard extends VBox implements View {
         imageView.setFitHeight(45);
         imageView.setFitWidth(45);
 
-        // Verificar monstro primeiro
-        if (boardModel.getMonster().getRow() == row &&
-            boardModel.getMonster().getCol() == col) {
+        // Check if the monster is in this position
+        if (boardModel.getMonster().getRow() == row && boardModel.getMonster().getCol() == col) {
             imageView.setImage(monsterImage);
         } else {
-            // Verificar bolas de neve
+            // Check for snowball or static terrain
             Snowball snowball = boardModel.snowballInPosition(row, col);
             if (snowball != null) {
-                switch (snowball.getType()) {
-                    case SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_small.png")));
-                    case MID -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_mid.png")));
-                    case BIG -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowball_big.png")));
-                    case MID_SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial1.png")));
-                    case BIG_SMALL -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial2.png")));
-                    case BIG_MID -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/snowman_partial3.png")));
-                    case COMPLETE -> imageView.setImage(snowmanImage);
-                }
+                imageView.setImage(switch (snowball.getType()) {
+                    case SMALL -> new Image(getClass().getResourceAsStream("/images/snowball_small.png"));
+                    case MID -> new Image(getClass().getResourceAsStream("/images/snowball_mid.png"));
+                    case BIG -> new Image(getClass().getResourceAsStream("/images/snowball_big.png"));
+                    case MID_SMALL -> new Image(getClass().getResourceAsStream("/images/snowman_partial1.png"));
+                    case BIG_SMALL -> new Image(getClass().getResourceAsStream("/images/snowman_partial2.png"));
+                    case BIG_MID -> new Image(getClass().getResourceAsStream("/images/snowman_partial3.png"));
+                    case COMPLETE -> snowmanImage;
+                });
             } else {
-                // Verificar outros conteúdos
                 PositionContent content = boardModel.getPositionContent(row, col);
-                switch (content) {
-                    case NO_SNOW -> imageView.setImage(new Image(getClass().getResourceAsStream("/images/grass.png")));
-                    case SNOW -> imageView.setImage(snowImage);
-                    case BLOCK -> imageView.setImage(blockImage);
-                    case SNOWMAN -> imageView.setImage(snowmanImage);
-                }
+                imageView.setImage(switch (content) {
+                    case NO_SNOW -> new Image(getClass().getResourceAsStream("/images/grass.png"));
+                    case SNOW -> snowImage;
+                    case BLOCK -> blockImage;
+                    case SNOWMAN -> snowmanImage;
+                });
             }
         }
 
@@ -245,15 +282,17 @@ public class SnowmanBoard extends VBox implements View {
         return cell;
     }
 
+    /**
+     * Logs a click event on a specific cell (currently for debugging).
+     */
     private void handleCellClick(int row, int col) {
-        // Registrar movimento no log
-        String move = String.format("(%d, %c) -> (%d, %c)",
-            row + 1, (char)('A' + col), row + 1, (char)('A' + col));
+        String move = String.format("(%d, %c) -> (%d, %c)", row + 1, (char) ('A' + col), row + 1, (char) ('A' + col));
         movementsLog.appendText(move + "\n");
-
-        // A verificação de fim de jogo já é feita no updateBoard()
     }
 
+    /**
+     * Saves the current game state to a file in the user's Documents/Snowman directory.
+     */
     public void saveGameToFile() {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String filename = "snowman" + timestamp + ".txt";
@@ -267,6 +306,9 @@ public class SnowmanBoard extends VBox implements View {
         }
     }
 
+    /**
+     * Creates the file path for saving the game.
+     */
     private Path createFilePath(String filename) throws IOException {
         String documentsPath = System.getProperty("user.home") + "/Documents";
         Path snowmanPath = Paths.get(documentsPath, "Snowman");
@@ -278,6 +320,9 @@ public class SnowmanBoard extends VBox implements View {
         return snowmanPath.resolve(filename);
     }
 
+    /**
+     * Writes the current game data to the specified file.
+     */
     private void saveGameData(Path filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath.toFile()))) {
             saveMap(writer);
@@ -287,9 +332,11 @@ public class SnowmanBoard extends VBox implements View {
         }
     }
 
+    /**
+     * Saves the current map layout to the file.
+     */
     private void saveMap(PrintWriter writer) {
-        writer.println("=== MAPA UTILIZADO ===");
-
+        writer.println("=== MAP USED ===");
         for (int i = 0; i < boardModel.getRows(); i++) {
             for (int j = 0; j < boardModel.getCols(); j++) {
                 PositionContent content = boardModel.getPositionContent(i, j);
@@ -304,20 +351,28 @@ public class SnowmanBoard extends VBox implements View {
         }
     }
 
+    /**
+     * Saves the text from the movement log.
+     */
     private void saveMovements(PrintWriter writer) {
-        writer.println("\n=== MOVIMENTOS REALIZADOS ===");
+        writer.println("\n=== MOVES PERFORMED ===");
         writer.println(movementsLog.getText());
     }
 
+    /**
+     * Saves the number of moves made.
+     */
     private void saveMoveCount(PrintWriter writer) {
         long moveCount = movementsLog.getText().lines().count();
-        writer.println("\n=== TOTAL DE MOVIMENTOS ===");
+        writer.println("\n=== TOTAL MOVES ===");
         writer.println(moveCount);
     }
 
+    /**
+     * Saves the final position of the snowman.
+     */
     private void saveSnowmanPosition(PrintWriter writer) {
-        writer.println("\n=== POSIÇÃO DO BONECO DE NEVE ===");
-
+        writer.println("\n=== SNOWMAN POSITION ===");
         for (int i = 0; i < boardModel.getRows(); i++) {
             for (int j = 0; j < boardModel.getCols(); j++) {
                 if (boardModel.getPositionContent(i, j) == PositionContent.SNOWMAN) {
@@ -328,21 +383,26 @@ public class SnowmanBoard extends VBox implements View {
         }
     }
 
+    /**
+     * Shows an alert to inform the user the file has been saved successfully.
+     */
     private void showSuccessAlert(Path filePath) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Arquivo Salvo");
-        alert.setHeaderText("Jogo salvo com sucesso!");
-        alert.setContentText("O arquivo foi salvo em:\n" + filePath.toString());
+        alert.setTitle("File Saved");
+        alert.setHeaderText("Game successfully saved!");
+        alert.setContentText("The file was saved at:\n" + filePath.toString());
         alert.showAndWait();
     }
 
+    /**
+     * Shows an alert if an error occurs while saving the file.
+     */
     private void showErrorAlert(IOException e) {
         e.printStackTrace();
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
-        alert.setHeaderText("Erro ao salvar o arquivo");
-        alert.setContentText("Não foi possível salvar o arquivo do jogo: " + e.getMessage());
+        alert.setTitle("Error");
+        alert.setHeaderText("Error saving the file");
+        alert.setContentText("Failed to save the game file: " + e.getMessage());
         alert.showAndWait();
     }
-
 }

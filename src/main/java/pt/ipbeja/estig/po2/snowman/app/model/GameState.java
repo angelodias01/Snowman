@@ -3,6 +3,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Represents a snapshot of the game state at a specific moment.
  * This class is used for features like undo/redo and resetting levels,

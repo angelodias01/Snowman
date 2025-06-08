@@ -1,5 +1,6 @@
 package pt.ipbeja.estig.po2.snowman.app.model;
 
+
 /**
  * Enum that represents the four cardinal directions a character or object can move on a 2D grid.
  * Each direction is associated with a change in row and column indexes.
