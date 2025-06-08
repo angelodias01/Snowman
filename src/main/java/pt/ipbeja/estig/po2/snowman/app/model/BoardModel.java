@@ -9,7 +9,6 @@ public class BoardModel {
     private final List<List<PositionContent>> board;
     private final Monster monster;
     private final List<Snowball> snowballs;
-    // ... outros atributos existentes ...
     private final Stack<GameState> history;
     private final Stack<GameState> redoHistory;
 
