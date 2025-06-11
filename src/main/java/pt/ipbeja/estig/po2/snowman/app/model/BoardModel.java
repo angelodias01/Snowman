@@ -229,17 +229,6 @@ public class BoardModel {
     }
 
     /**
-     * Moves the given snowball in a specified direction.
-     *
-     * @param direction Direction of movement.
-     * @param snowball  Snowball to move.
-     * @return true if the move was successful; false otherwise.
-     */
-    public boolean moveSnowball(Direction direction, Snowball snowball) {
-        return snowball.move(direction, this);
-    }
-
-    /**
      * Moves the monster in the given direction and saves state for undo.
      *
      * @param direction Direction to move.

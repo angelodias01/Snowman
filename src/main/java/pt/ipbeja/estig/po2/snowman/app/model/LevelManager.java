@@ -98,6 +98,71 @@ public class LevelManager {
 
         return board;
     }
+    private List<List<PositionContent>> createLevel3Board() {
+        List<List<PositionContent>> board = new ArrayList<>();
+        int rows = 6;
+        int cols = 6;
+
+        // Create a 6x6 grid filled with snow
+        for (int i = 0; i < rows; i++) {
+            List<PositionContent> row = new ArrayList<>();
+            for (int j = 0; j < cols; j++) {
+                row.add(PositionContent.SNOW);
+            }
+            board.add(row);
+        }
+
+        board.get(0).set(4, PositionContent.BLOCK);  // Block 1
+        board.get(3).set(1, PositionContent.BLOCK);  // Block 2
+        board.get(2).set(0, PositionContent.BLOCK);  // Block 3
+        board.get(4).set(4, PositionContent.BLOCK);  // Bl
+
+        return board;
+    }
+    private List<List<PositionContent>> createLevel4Board() {
+        List<List<PositionContent>> board = new ArrayList<>();
+        int rows = 6;
+        int cols = 6;
+
+        // Create a 6x6 grid filled with snow
+        for (int i = 0; i < rows; i++) {
+            List<PositionContent> row = new ArrayList<>();
+            for (int j = 0; j < cols; j++) {
+                row.add(PositionContent.SNOW);
+            }
+            board.add(row);
+        }
+
+        board.get(0).set(3, PositionContent.BLOCK);  // Block 1
+        board.get(2).set(2, PositionContent.BLOCK);  // Block 2
+        board.get(3).set(3, PositionContent.BLOCK);  // Block 3
+        board.get(4).set(0, PositionContent.BLOCK);  // Block 4
+
+
+        return board;
+    }
+    private List<List<PositionContent>> createLevel5Board() {
+        List<List<PositionContent>> board = new ArrayList<>();
+        int rows = 6;
+        int cols = 6;
+
+        // Create a 6x6 grid filled with snow
+        for (int i = 0; i < rows; i++) {
+            List<PositionContent> row = new ArrayList<>();
+            for (int j = 0; j < cols; j++) {
+                row.add(PositionContent.SNOW);
+            }
+            board.add(row);
+        }
+
+        board.get(2).set(2, PositionContent.BLOCK);
+        board.get(2).set(3, PositionContent.BLOCK);
+        board.get(3).set(2, PositionContent.BLOCK);
+        board.get(3).set(3, PositionContent.BLOCK);
+
+
+        return board;
+    }
 
     /**
      * Initializes all predefined levels in the game.
@@ -109,7 +174,7 @@ public class LevelManager {
         // Level 1 configuration (5x5 grid with snowballs placed in specific positions)
         List<List<PositionContent>> board1 = createLevel1Board();
         List<Snowball> snowballs1 = Arrays.asList(
-                new Snowball(2, 3, SnowballType.SMALL), // Specific starting positions of snowballs
+                new Snowball(2, 3, SnowballType.SMALL),
                 new Snowball(1, 2, SnowballType.SMALL),
                 new Snowball(3, 1, SnowballType.SMALL)
         );
@@ -118,11 +183,36 @@ public class LevelManager {
         // Level 2 configuration (6x6 grid with added blocks and snowballs)
         List<List<PositionContent>> board2 = createLevel2Board();
         List<Snowball> snowballs2 = Arrays.asList(
-                new Snowball(1, 1, SnowballType.SMALL),  // Top-left corner
-                new Snowball(1, 4, SnowballType.SMALL),  // Top-right corner
-                new Snowball(4, 1, SnowballType.SMALL)   // Bottom-left corner
+                new Snowball(1, 1, SnowballType.SMALL),
+                new Snowball(1, 4, SnowballType.SMALL),
+                new Snowball(4, 1, SnowballType.SMALL)
         );
         levels.add(new Level(board2, 0, 0, snowballs2, 2)); // Set Level 2 with ID 2
+        // Level 2 configuration (6x6 grid with added blocks and snowballs)
+        List<List<PositionContent>> board3 = createLevel3Board();
+        List<Snowball> snowballs3 = Arrays.asList(
+                new Snowball(2, 3, SnowballType.SMALL),
+                new Snowball(4, 0, SnowballType.SMALL),
+                new Snowball(1, 2, SnowballType.SMALL)
+        );
+        levels.add(new Level(board3, 0, 0, snowballs3, 3)); // Set Level 2 with ID 2
+        // Level 2 configuration (6x6 grid with added blocks and snowballs)
+        List<List<PositionContent>> board4 = createLevel4Board();
+        List<Snowball> snowballs4 = Arrays.asList(
+                new Snowball(1, 1, SnowballType.SMALL),
+                new Snowball(2, 4, SnowballType.SMALL),
+                new Snowball(4, 2, SnowballType.SMALL)
+
+        );
+        levels.add(new Level(board4, 0, 0, snowballs4, 4)); // Set Level 2 with ID 2
+        // Level 2 configuration (6x6 grid with added blocks and snowballs)
+        List<List<PositionContent>> board5 = createLevel5Board();
+        List<Snowball> snowballs5 = Arrays.asList(
+                new Snowball(0, 1, SnowballType.SMALL),
+                new Snowball(1, 3, SnowballType.SMALL),
+                new Snowball(4, 0, SnowballType.SMALL)
+        );
+        levels.add(new Level(board5, 0, 0, snowballs5, 5)); // Set Level 2 with ID 2
     }
 
     /**

@@ -138,13 +138,27 @@ public class SnowmanGUI extends Application {
             alert.setContentText("Would you like to go to the next level?");
 
             Optional<ButtonType> result = alert.showAndWait();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Player chose to continue
                 this.boardModel = levelManager.loadNextLevel();
                 snowmanBoard.loadNewLevel(boardModel);
                 Stage stage = (Stage) snowmanBoard.getScene().getWindow();
                 stage.setTitle("Snowman Game - Level " + (levelManager.getCurrentLevelIndex() + 1));
+            } else {
+                // Player chose NOT to continue — save and show thank-you message
+                snowmanBoard.saveGameToFile();
+                snowmanBoard.saveScore();
+                updateLeaderboard();
+
+                Alert exitAlert = new Alert(Alert.AlertType.INFORMATION);
+                exitAlert.setTitle("Game Saved");
+                exitAlert.setHeaderText("Progress Saved");
+                exitAlert.setContentText("Your progress and score have been saved. Thanks for playing!");
+                exitAlert.showAndWait();
             }
         } else {
+            // Last level was completed
             snowmanBoard.saveGameToFile();
             snowmanBoard.saveScore();
             updateLeaderboard();

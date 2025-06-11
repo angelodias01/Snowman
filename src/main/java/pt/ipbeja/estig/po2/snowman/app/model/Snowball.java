@@ -79,31 +79,36 @@ public class Snowball extends MobileElement {
      */
     @Override
     public boolean move(Direction direction, BoardModel board) {
-        int newRow = this.getRow() + direction.getDeltaRow();
-        int newCol = this.getCol() + direction.getDeltaCol();
+        // Prevent movement if the snowball is combined or complete
+        switch (type) {
+            case MID_SMALL, BIG_SMALL, BIG_MID, COMPLETE -> {
+                return false;
+            }
+            default -> {
+                // Your existing move logic for SMALL, MID, BIG
+                int newRow = this.getRow() + direction.getDeltaRow();
+                int newCol = this.getCol() + direction.getDeltaCol();
 
-        // Check if the target position is valid
-        if (!board.validPosition(newRow, newCol)) {
-            return false;
+                if (!board.validPosition(newRow, newCol)) {
+                    return false;
+                }
+
+                Snowball otherSnowball = board.snowballInPosition(newRow, newCol);
+                if (otherSnowball != null) {
+                    return tryToCombineSnowballs(otherSnowball, board);
+                }
+
+                PositionContent destination = board.getPositionContent(newRow, newCol);
+                if (destination == PositionContent.SNOW) {
+                    increaseSnowballType();
+                    board.setPositionContent(newRow, newCol, PositionContent.NO_SNOW);
+                }
+
+                this.setRow(newRow);
+                this.setCol(newCol);
+                return true;
+            }
         }
-
-        // Check for another snowball at the target position
-        Snowball otherSnowball = board.snowballInPosition(newRow, newCol);
-        if (otherSnowball != null) {
-            return tryToCombineSnowballs(otherSnowball, board);
-        }
-
-        // Check and handle snow at the target position
-        PositionContent destination = board.getPositionContent(newRow, newCol);
-        if (destination == PositionContent.SNOW) {
-            increaseSnowballType();
-            board.setPositionContent(newRow, newCol, PositionContent.NO_SNOW);
-        }
-
-        // Move the snowball to the new position
-        this.setRow(newRow);
-        this.setCol(newCol);
-        return true;
     }
 
     /**
@@ -125,7 +130,7 @@ public class Snowball extends MobileElement {
             board.getSnowballs().remove(this);
 
             if (newType == SnowballType.COMPLETE) {
-                // Create a complete snowman
+                // Create a complete snowman at the position
                 board.setPositionContent(other.getRow(), other.getCol(), PositionContent.SNOWMAN);
             } else {
                 // Create a new combined snowball
@@ -136,6 +141,7 @@ public class Snowball extends MobileElement {
         }
         return false;
     }
+
 
     /**
      * Calculates the resulting type of two combined snowballs.
@@ -160,28 +166,11 @@ public class Snowball extends MobileElement {
                 (type2 == SnowballType.MID && type1 == SnowballType.BIG)) {
             return SnowballType.BIG_MID;
         }
-
-        // Check for all three parts to form the complete snowman
-        if (hasAllThreeParts(type1, type2)) {
+        if ((type1 == SnowballType.SMALL && type2 == SnowballType.BIG_MID) ||
+                (type2 == SnowballType.SMALL && type1 == SnowballType.BIG_MID)) {
             return SnowballType.COMPLETE;
         }
-
         return null;
     }
 
-    /**
-     * Checks whether two snowballs together form all parts of a complete snowman.
-     *
-     * @param type1 The type of the first snowball.
-     * @param type2 The type of the second snowball.
-     * @return true if the types form a complete snowman; false otherwise.
-     */
-    private boolean hasAllThreeParts(SnowballType type1, SnowballType type2) {
-        return (type1 == SnowballType.BIG_MID && type2 == SnowballType.SMALL) ||
-                (type2 == SnowballType.BIG_MID && type1 == SnowballType.SMALL) ||
-                (type1 == SnowballType.BIG_SMALL && type2 == SnowballType.MID) ||
-                (type2 == SnowballType.BIG_SMALL && type1 == SnowballType.MID) ||
-                (type1 == SnowballType.MID_SMALL && type2 == SnowballType.BIG) ||
-                (type2 == SnowballType.MID_SMALL && type1 == SnowballType.BIG);
-    }
 }

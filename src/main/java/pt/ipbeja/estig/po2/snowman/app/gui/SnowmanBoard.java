@@ -276,11 +276,11 @@ public class SnowmanBoard extends VBox implements View {
     private Label createCell(int row, int col) {
         Label cell = new Label();
         cell.setMinSize(50, 50);
-        cell.setStyle("-fx-border-color: black; -fx-alignment: center;");
+        cell.setStyle("-fx-border-color: none; -fx-alignment: center;");
 
         ImageView imageView = new ImageView();
-        imageView.setFitHeight(45);
-        imageView.setFitWidth(45);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
 
         if (boardModel.getMonster().getRow() == row &&
                 boardModel.getMonster().getCol() == col) {
