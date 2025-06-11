@@ -24,7 +24,7 @@ import java.util.List;
  * - Instances of GameState are immutable and inherently thread-safe.
  * - However, concurrent access to the BoardModel instance used to create snapshots should be synchronized externally.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class GameState {
 

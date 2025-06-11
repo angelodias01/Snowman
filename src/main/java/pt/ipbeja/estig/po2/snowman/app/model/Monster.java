@@ -11,7 +11,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Represent the monster controlled by the player in terms of position and movement.
  * - Implement movement functionality based on board constraints and snowball interactions.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class Monster extends MobileElement {
 

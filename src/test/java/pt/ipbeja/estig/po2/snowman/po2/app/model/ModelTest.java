@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * It uses a 5x5 grid with various PositionContent states to simulate the game environment.
  *
- *  * @authors Ângelo Dias(24288), Edgar Brito(22895)
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class ModelTest {
     private BoardModel board;
@@ -93,8 +93,8 @@ public class ModelTest {
         assertEquals(0, snowball.getRow());
         assertEquals(1, snowball.getCol());
     }
-
     @Test
+    @DisplayName("onster climbs up spine and forms complete snowman")
     public void testCompleteSnowman() {
         board.getSnowballs().clear();
         board.getSnowballs().add(new Snowball(1, 3, SnowballType.BIG));

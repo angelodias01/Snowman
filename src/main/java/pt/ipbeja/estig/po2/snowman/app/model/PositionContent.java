@@ -18,7 +18,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Helps in rendering and updating the board dynamically.
  * - Simplifies logic for interactions between game entities and board cells.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public enum PositionContent {
     /**

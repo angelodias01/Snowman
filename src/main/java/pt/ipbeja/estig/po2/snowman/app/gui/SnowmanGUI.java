@@ -37,8 +37,7 @@ import java.util.Optional;
  * Extends {@link Application} to launch the JavaFX GUI.
  * </p>
  *
- * @author Ângelo Dias
- * @author Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class SnowmanGUI extends Application {
     private BoardModel boardModel;

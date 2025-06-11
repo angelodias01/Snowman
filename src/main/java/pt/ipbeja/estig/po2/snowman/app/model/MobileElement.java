@@ -11,7 +11,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Monster: the monster controlled by the player.
  * - Snowball: the snowball that can be pushed or combined in the game.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public abstract class MobileElement {
     /**

@@ -20,7 +20,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Classes implementing this interface should be observers of the game's model,
  * ensuring that updates to the model propagate to the view in real-time.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public interface View {
 

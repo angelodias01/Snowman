@@ -22,7 +22,7 @@ import java.io.InputStream;
  * Threading Note:
  * This class is not designed for concurrent use. Ensure that method invocations occur on the same thread.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class GameAudio {
 

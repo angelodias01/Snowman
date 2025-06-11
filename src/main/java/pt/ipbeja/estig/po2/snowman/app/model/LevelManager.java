@@ -20,7 +20,7 @@ import java.util.List;
  * - The levels are managed as a sequential list (`List<Level>`), where each Level is indexed starting at 0.
  * - The levels are predefined in the `initializeLevels` method.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class LevelManager {
     /**

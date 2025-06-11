@@ -13,7 +13,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Implement movement logic specific to snowballs, including interactions
  * with the board and other elements.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class Snowball extends MobileElement {
     /**

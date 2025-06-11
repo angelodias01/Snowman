@@ -23,7 +23,7 @@ package pt.ipbeja.estig.po2.snowman.app.model;
  * - Provides a clear and extensible representation of snowball states.
  * - Facilitates logic for snowball growth and combination.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public enum SnowballType {
     /**

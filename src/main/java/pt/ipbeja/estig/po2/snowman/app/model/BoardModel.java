@@ -21,7 +21,7 @@ import java.util.Stack;
  * <p>
  * Threading: This class is not thread-safe and should be accessed from a single thread.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class BoardModel {
 

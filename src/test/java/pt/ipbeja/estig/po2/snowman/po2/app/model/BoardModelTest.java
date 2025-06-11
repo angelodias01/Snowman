@@ -7,7 +7,20 @@ import pt.ipbeja.estig.po2.snowman.app.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Unit tests for the BoardModel class focusing on the monster's movement and interaction
+ * with snowballs within a constrained board environment.
+ *
+ * The tests cover:
+ * - Monster movement in various directions, including invalid moves beyond the board boundaries.
+ * - Interaction with snowballs, including pushing them and triggering their growth.
+ * - Validating position contents on the board.
+ * - Ensuring that the game rules regarding movement and snowball behavior are correctly enforced.
+ *
+ * The board used in tests is a 3x1 grid to simplify vertical movement scenarios.
+ *
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
+ */
 public class BoardModelTest {
     Monster monster;
     List<List<PositionContent>> content = new ArrayList<>();
@@ -71,7 +84,6 @@ public class BoardModelTest {
         assertEquals(1, monster.getRow());
         assertEquals(0, monster.getCol());
     }
-
 
     @Test
     @DisplayName("Test invalid monster move beyond board")
@@ -189,6 +201,4 @@ public class BoardModelTest {
         assertFalse(invalidPush);
         assertEquals(0, snowball.getRow()); // Should remain at top
     }
-
-    //TODO A function here needs verification for the end snowball not sure if last or before last..
 }

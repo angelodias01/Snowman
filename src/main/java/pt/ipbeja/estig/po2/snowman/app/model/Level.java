@@ -19,7 +19,7 @@ import java.util.List;
  * - Deep copies are used to ensure immutability of initial configurations.
  * - Grouping and encapsulating level data simplifies level management and game initialization.
  *
- * @author Ângelo Dias, Edgar Brito
+ *  @author Ângelo Dias(24288), Edgar Brito(22895)
  */
 public class Level {
 
