@@ -142,7 +142,6 @@ public class Snowball extends MobileElement {
         return false;
     }
 
-
     /**
      * Calculates the resulting type of two combined snowballs.
      * <p>

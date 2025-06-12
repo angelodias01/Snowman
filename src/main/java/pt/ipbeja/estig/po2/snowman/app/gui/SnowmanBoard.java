@@ -220,7 +220,6 @@ public class SnowmanBoard extends VBox implements View {
                 updateBoard();
             }
         }
-
         event.consume();
     }
 

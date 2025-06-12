@@ -39,7 +39,6 @@ public class BoardModel {
     private final Stack<GameState> history;
     private final Stack<GameState> redoHistory;
     
-
     /**
      * Initial state storage for level reset functionality:
      * - initialBoard: Starting board configuration
@@ -91,7 +90,6 @@ public class BoardModel {
      * @return true if the level objectives are met, false otherwise
      */
 
-    // Additional helper methods documentation...
 
     /**
      * Implementation considerations:
