@@ -52,18 +52,24 @@ Persistence — Save/load game progress and leaderboard data
 
 🚀 Getting Started
 Prerequisites
-Java 17 or later
+- Java 17 or later
+- Apache Maven 3.6 or later
+- JavaFX 19 (included as Maven dependency)
 
-JavaFX runtime installed and configured
-
-Installation Steps
-bash
-Copiar
-Editar
+Installation & Running
+```bash
+# Clone the repository
 git clone https://github.com/angelodias01/Snowman.git
-cd snowman-game
+cd Snowman
 
-# Open in your favorite Java IDE, build and run
+# Build the project
+mvn clean install
+
+# Run the game
+mvn javafx:run
+```
+
+Alternative: Open the project in your favorite Java IDE (IntelliJ IDEA, Eclipse, VS Code) and run the `SnowmanGUI` class
 🎮 How to Play
 Action	Control
 Move Monster	Arrow Keys
@@ -128,3 +134,9 @@ Edgar Brito
 
 🤝 Contribution & Contact
 Found a bug or want to add a feature? Open an issue or submit a pull request — contributions are welcome!
+
+📜 License
+This project is part of an academic assignment at Instituto Politécnico de Beja - ESTIG.
+
+---
+**Developed with ❄️ by Ângelo Dias & Edgar Brito**
