@@ -27,6 +27,7 @@ public class BoardModelTest {
     List<Snowball> snowballs = new ArrayList<>();
     BoardModel board;
 
+    
     int rows = 3;
     int cols = 1;
 
